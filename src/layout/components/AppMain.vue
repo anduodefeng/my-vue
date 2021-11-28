@@ -1,5 +1,6 @@
 <template>
   <section class="app-main">
+    <!-- 转场动画效果配置，主体页面 -->
     <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
     </transition>
