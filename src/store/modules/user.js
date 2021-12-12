@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles: []
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles;
   }
 }
 
@@ -33,8 +37,9 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        commit('SET_TOKEN', response.data.token)
-        setToken(response.data.token)
+        const { data } = response
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -46,13 +51,17 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-
-        if (response.code != 1000) {
-          return reject('Verification failed, please Login again.')
-        }
-        // commit('SET_NAME', name)
-        // commit('SET_AVATAR', avatar)
-        resolve(response)
+        const {data} = response
+        //加载权限，是一个list 或者数组
+        const {roles} = data
+        
+        //存起来 通过状态管理
+        commit('SET_ROLES', roles);
+        //姓名
+        commit('SET_NAME', data.name)
+        //头像
+        commit('SET_AVATAR', data.avatar)
+        resolve(data)
       }).catch(error => {
         reject(error)
       })

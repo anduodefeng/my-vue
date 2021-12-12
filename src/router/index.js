@@ -66,26 +66,13 @@ export const constantRoutes = [
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '表格', icon: 'table' }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        meta: { title: '树', icon: 'tree' }
       }
     ]
   },
@@ -147,15 +134,23 @@ export const constantRoutes = [
         meta: { title: 'menu2' }
       }
     ]
-  },
+  }
+]
 
+/**
+ * 动态路由，需要配合权限使用,根据请求user/info接口返回的roles列表
+ * @returns 
+ */
+export const asyncRoutes = [
   {
-    path: 'external-link',
+    path: '/myRoutes1',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'index',
+        component: () => import('@/views/tree/index'),
+        name: 'Icons',
+        meta: { title: '我的路由', icon: 'tree', roles: ['admin'] }
       }
     ]
   },

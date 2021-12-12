@@ -26,21 +26,33 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        try {
-          // get user info
-          await store.dispatch('user/getInfo')
+      //判断是否获取权限
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
 
+      if (hasRoles){
+        next();
+      }else{
+        const hasGetUserInfo = store.getters.name
+        if (hasGetUserInfo) {
           next()
-        } catch (error) {
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
+        } else {
+          try {
+            // get user info, 获取权限列表
+            const {roles} = await store.dispatch('user/getInfo')
+            
+            //返回的就是异步加载的routers
+            const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+
+            router.addRoutes(accessRoutes)
+            //暂时也没搞懂
+            next({...to, replace: true})
+          } catch (error) {
+            // remove token and go to login page to re-login
+            await store.dispatch('user/resetToken')
+            Message.error(error || 'Has Error')
+            next(`/login?redirect=${to.path}`)
+            NProgress.done()
+          }
         }
       }
     }
