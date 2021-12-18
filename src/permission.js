@@ -28,21 +28,19 @@ router.beforeEach(async(to, from, next) => {
     } else {
       //判断是否获取权限
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
-
       if (hasRoles){
         next();
       }else{
-        const hasGetUserInfo = store.getters.name
+        const hasGetUserInfo = store.getters.avatar
         if (hasGetUserInfo) {
           next()
         } else {
           try {
             // get user info, 获取权限列表
             const {roles} = await store.dispatch('user/getInfo')
-            
             //返回的就是异步加载的routers
             const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-
+            //异步挂在routes
             router.addRoutes(accessRoutes)
             //暂时也没搞懂
             next({...to, replace: true})
@@ -58,7 +56,6 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()

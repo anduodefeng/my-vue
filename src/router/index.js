@@ -150,7 +150,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/tree/index'),
         name: 'Icons',
-        meta: { title: '我的路由', icon: 'tree', roles: ['admin'] }
+        meta: { title: '我的路由', icon: 'tree', roles: ['test'] }
       }
     ]
   },

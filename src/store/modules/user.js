@@ -36,9 +36,11 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ "name": username.trim(), "password": password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        //姓名
+        commit('SET_NAME', username.trim())
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -50,15 +52,13 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+
+      getInfo({"name": state.name}).then(response => {
         const {data} = response
         //加载权限，是一个list 或者数组
         const {roles} = data
-        
-        //存起来 通过状态管理
+        //存起来权限信息 通过状态管理
         commit('SET_ROLES', roles);
-        //姓名
-        commit('SET_NAME', data.name)
         //头像
         commit('SET_AVATAR', data.avatar)
         resolve(data)
@@ -71,14 +71,10 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      removeToken() // must remove  token  first
+      resetRouter()
+      commit('RESET_STATE')
+      resolve()
     })
   },
 
