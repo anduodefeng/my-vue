@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'My VUE',
+  title: 'My Assets System Manager',
 
   /**
    * @type {boolean} true | false
