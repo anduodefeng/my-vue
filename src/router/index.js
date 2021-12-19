@@ -61,8 +61,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'cash',
-        // name: 'Table',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/cash/index'),
         meta: { title: '现金', icon: 'money' }
       },
       {
