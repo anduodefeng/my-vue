@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">Welcome To My Assets System!!!</div>
+    <div class="dashboard-text">欢迎你！！</div>
   </div>
 </template>
 
