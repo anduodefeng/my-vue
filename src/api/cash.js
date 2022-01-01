@@ -22,3 +22,11 @@ export function saveCashDetail(data){
     data
   })
 }
+
+export function getCashDetail(data){
+  return request({
+    url: '/cash/detailPage',
+    method: 'POST',
+    data
+  })
+}

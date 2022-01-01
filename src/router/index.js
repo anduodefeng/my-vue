@@ -60,9 +60,16 @@ export const constantRoutes = [
     meta: { title: '资金', icon: 'assets-amount' },
     children: [
       {
-        path: 'cash',
+        path: 'cashIndex',
         component: () => import('@/views/cash/index'),
         meta: { title: '现金', icon: 'money' }
+      },
+      {
+        path: 'cashDetail',
+        name: 'cashDetail',
+        hidden: true,
+        component: () => import('@/views/cash/detail'),
+        meta: { title: '明细', icon: 'money' }
       },
       {
         path: 'invest',

@@ -30,7 +30,9 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
-        <el-button type="primary" plain>查看变动详情</el-button>
+        <template slot-scope="scope">
+          <el-button type="primary" plain @click="getDetail(scope.row.bankName)">查看变动详情</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <br/>
@@ -160,7 +162,13 @@ export default {
       if(this.$refs[formName]){
         this.$refs[formName].resetFields();
       }
-      
+    },
+    getDetail(bankName){
+      this.$router.push({
+        path: "/assets",
+        name: 'cashDetail',
+        params: {bankName: bankName}
+      })
     }
   }
 }
