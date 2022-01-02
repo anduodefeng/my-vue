@@ -58,28 +58,57 @@ export const constantRoutes = [
     path: '/assets',
     component: Layout,
     meta: { title: '资金', icon: 'assets-amount' },
+    redirect: '/assets/cashIndex',
     children: [
       {
         path: 'cashIndex',
-        component: () => import('@/views/cash/index'),
+        name: 'cashIndex',
+        component: () => import('@/views/assets/cash/index'),
         meta: { title: '现金', icon: 'money' }
       },
       {
         path: 'cashDetail',
         name: 'cashDetail',
         hidden: true,
-        component: () => import('@/views/cash/detail'),
+        component: () => import('@/views/assets/cash/detail'),
         meta: { title: '明细', icon: 'money' }
       },
       {
         path: 'invest',
-        // name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '理财', icon: 'financial' }
+        name: 'invest',
+        meta: { title: '理财', icon: 'financial' },
+        component: () => import('@/views/assets/invest/index'),
+        children: [
+          {
+            path: 'indexFund',
+            name: 'indexFund',
+            component: () => import('@/views/assets/invest/index-fund/index'),
+            meta: { title: '指数基金', icon: 'money'}
+          },
+          {
+            path: 'indexFundDetail',
+            name: 'indexFundDetail',
+            hidden: true,
+            component: () => import('@/views/assets/invest/index-fund/detail'),
+            meta: { title: '指数基金', icon: 'money'}
+          },
+          {
+            path: 'activeFund',
+            name: 'activeFund',
+            component: () => import('@/views/assets/invest/active-fund/index'),
+            meta: { title: '主动基金', icon: 'money'}
+          },
+          {
+            path: 'activeFundDetail',
+            name: 'activeFundDetail',
+            hidden: true,
+            component: () => import('@/views/assets/invest/active-fund/detail'),
+            meta: { title: '指数基金', icon: 'money'}
+          },
+        ]
       }
     ]
   },
-
   {
     path: '/debt',
     component: Layout,

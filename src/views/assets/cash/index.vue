@@ -150,8 +150,6 @@ export default {
               alert(message)
             }
           })
-          
-          this.addBankDialogVisible = false;
         }else{
           alert("请填写全部内容后，在提交!!!")
         }
