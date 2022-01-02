@@ -3,7 +3,7 @@
     <el-button type="primary" style="margin:10px;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
     <el-table
       v-loading="listLoading"
-      :data="bankList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="bankList"
       element-loading-text="Loading"
       border
       fit
@@ -122,15 +122,10 @@ export default {
         this.bankNames = response.data.bankNames
       })
     },
-    handleSizeChange(val){
-      //改变每页显示的条数
-      this.pageSize = val
-      //注意：在改变每页显示的条数时，要将页码显示到第一页
-      this.currentPage = 1
-    },
     handleCurrentChange(val){
       //改变默认的页数
       this.currentPage = val
+      this.fetchData()
     },
     submitForm(formName){
       this.$refs[formName].validate((valid) =>{

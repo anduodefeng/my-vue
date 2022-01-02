@@ -3,7 +3,7 @@
     <el-button type="primary" style="margin:10px;" @click="addFundDrawerVisible=true">更新基金</el-button>
     <el-table
       v-loading="listLoading"
-      :data="fundList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="fundList"
       element-loading-text="Loading"
       border
       fit

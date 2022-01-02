@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-table
       v-loading="listLoading"
-      :data="detailList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="detailList"
       element-loading-text="Loading"
       border
       fit
@@ -72,15 +72,10 @@ export default {
         })
       
     },
-    handleSizeChange(val){
-      //改变每页显示的条数
-      this.pageSize = val
-      //注意：在改变每页显示的条数时，要将页码显示到第一页
-      this.currentPage = 1
-    },
     handleCurrentChange(val){
       //改变默认的页数
       this.currentPage = val
+      this.fetchData()
     }
   }
 }

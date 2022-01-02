@@ -1,8 +1,11 @@
 <template>
   <div class="app-container">
+    <div ref="aaa" style="border:1px solid black;width:1400px;height:300px; margin-bottom:10px;">
+    </div>
+    <div>变动详情</div>
     <el-table
       v-loading="listLoading"
-      :data="detailList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="detailList"
       element-loading-text="Loading"
       border
       fit
@@ -57,7 +60,6 @@
     </el-table>
     <br/>
     <el-pagination style="float: right;" background layout="prev, pager, next"
-    @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
     :current-page="currentPage"
     :page-size="pageSize" 
@@ -76,11 +78,14 @@ export default {
       listLoading: true,
       currentPage:1,
       totalCount:1,
-      pageSize: 20
+      pageSize: 5
     }
   },
   created() {
     this.fetchData()
+  },
+  mounted(){
+    this.initCharts();
   },
   methods: {
     fetchData() {
@@ -98,15 +103,32 @@ export default {
         })
       
     },
-    handleSizeChange(val){
-      //改变每页显示的条数
-      this.pageSize = val
-      //注意：在改变每页显示的条数时，要将页码显示到第一页
-      this.currentPage = 1
-    },
     handleCurrentChange(val){
       //改变默认的页数
       this.currentPage = val
+      this.fetchData();
+    },
+    initCharts(){
+      const chart = this.$refs.aaa
+      if(chart){
+        const myCharts = this.$echarts.init(chart)
+        const option = {
+            xAxis: {
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: 'bar'
+    }
+  ]
+        }
+        myCharts.setOption(option)
+      }
     }
   }
 }

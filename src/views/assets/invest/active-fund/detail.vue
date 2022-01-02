@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-table
       v-loading="listLoading"
-      :data="detailList.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+      :data="detailList"
       element-loading-text="Loading"
       border
       fit
