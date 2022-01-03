@@ -47,6 +47,13 @@
           <span v-if="scope.row.profit == 0">{{ scope.row.profit }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="收益率">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime }}</span>
@@ -72,7 +79,7 @@
     :total="totalCount"/>
 
     <el-drawer :visible.sync="addFundDrawerVisible" @close="$refs['addFundForm'].resetFields()" :direction="direction" 
-               size="400px" title="更新基金">
+               size="400px" title="更新基金(先更新当日收益情况，再更新转入转出操作哦！)">
       <el-form style="margin-left:90px" :model="addFundForm" ref="addFundForm" :rules="addFundRules" label-width="80px" size="mini" @submit.native.prevent>
         <el-form-item label="基金名称" prop="name">
           <el-select v-model="addFundForm.name" filterable allow-create @change="getFundInfo" placeholder="请选择">

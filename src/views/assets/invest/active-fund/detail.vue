@@ -44,9 +44,16 @@
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="备注">
+      <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.remark }}</span>
+          <span>{{ scope.row.money }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="收益率">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="更新时间">

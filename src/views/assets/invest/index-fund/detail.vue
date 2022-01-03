@@ -47,9 +47,16 @@
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="备注">
+      <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.remark }}</span>
+          <span>{{ scope.row.money }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="收益率">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="更新时间">
@@ -113,19 +120,19 @@ export default {
       if(chart){
         const myCharts = this.$echarts.init(chart)
         const option = {
-            xAxis: {
-    type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  },
-  yAxis: {
-    type: 'value'
-  },
-  series: [
-    {
-      data: [120, 200, 150, 80, 70, 110, 130],
-      type: 'bar'
-    }
-  ]
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: [120, 200, 150, 80, 70, 110, 130],
+              type: 'bar'
+            }
+          ]
         }
         myCharts.setOption(option)
       }
