@@ -74,36 +74,70 @@ export const constantRoutes = [
         meta: { title: '明细', icon: 'money' }
       },
       {
-        path: 'invest',
-        name: 'invest',
-        meta: { title: '理财', icon: 'financial' },
-        component: () => import('@/views/assets/invest/index'),
+        path: 'fund',
+        name: 'fund',
+        meta: { title: '基金', icon: 'financial' },
+        component: () => import('@/views/assets/fund/index'),
         children: [
           {
             path: 'indexFund',
             name: 'indexFund',
-            component: () => import('@/views/assets/invest/index-fund/index'),
+            component: () => import('@/views/assets/fund/index-fund/index'),
             meta: { title: '指数基金', icon: 'money'}
           },
           {
             path: 'indexFundDetail',
             name: 'indexFundDetail',
             hidden: true,
-            component: () => import('@/views/assets/invest/index-fund/detail'),
+            component: () => import('@/views/assets/fund/index-fund/detail'),
             meta: { title: '指数基金', icon: 'money'}
           },
           {
             path: 'activeFund',
             name: 'activeFund',
-            component: () => import('@/views/assets/invest/active-fund/index'),
+            component: () => import('@/views/assets/fund/active-fund/index'),
             meta: { title: '主动基金', icon: 'money'}
           },
           {
             path: 'activeFundDetail',
             name: 'activeFundDetail',
             hidden: true,
-            component: () => import('@/views/assets/invest/active-fund/detail'),
-            meta: { title: '指数基金', icon: 'money'}
+            component: () => import('@/views/assets/fund/active-fund/detail'),
+            meta: { title: '主动基金', icon: 'money'}
+          },
+        ]
+      },
+      {
+        path: 'portfolio',
+        name: 'portfolio',
+        meta: { title: '组合', icon: 'financial' },
+        component: () => import('@/views/assets/portfolio/index'),
+        children: [
+          {
+            path: 'egg-roll',
+            name: 'egg-roll',
+            component: () => import('@/views/assets/portfolio/egg-roll/index'),
+            meta: { title: '蛋卷平台', icon: 'money'}
+          },
+          {
+            path: 'egg-roll-detail',
+            name: 'egg-roll-detail',
+            hidden: true,
+            component: () => import('@/views/assets/portfolio/egg-roll/detail'),
+            meta: { title: '蛋卷平台', icon: 'money'}
+          },
+          {
+            path: 'qie-man',
+            name: 'qie-man',
+            component: () => import('@/views/assets/portfolio/qie-man/index'),
+            meta: { title: '且慢平台', icon: 'money'}
+          },
+          {
+            path: 'qie-man-detail',
+            name: 'qie-man-detail',
+            hidden: true,
+            component: () => import('@/views/assets/portfolio/qie-man/detail'),
+            meta: { title: '且慢平台', icon: 'money'}
           },
         ]
       }

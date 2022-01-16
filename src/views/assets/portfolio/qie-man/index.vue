@@ -1,0 +1,213 @@
+<template>
+  <div class="app-container">
+    <el-button type="primary" style="margin:10px;" @click="addPortfolioDrawerVisible=true">更新组合</el-button>
+    <el-table
+      v-loading="listLoading"
+      :data="portfolioList"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      style="width: 1400px"
+    >
+      <el-table-column align="center" label="序号" width="95">
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="组合名称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="组合价值">
+        <template slot-scope="scope">
+          <span>{{ scope.row.money }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="盈利">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profit > 0" style="color:red">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit < 0" style="color:green">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit == 0">{{ scope.row.profit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="收益率">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button type="primary" plain @click="getDetail(scope.row.id)">查看变动</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <br/>
+    <el-pagination style="float: right;" background layout="prev, pager, next"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    :current-page="currentPage"
+    :page-size="pageSize" 
+    :total="totalCount"/>
+
+    <el-drawer :visible.sync="addPortfolioDrawerVisible" @close="$refs['addPortfolioForm'].resetFields()" :direction="direction" 
+               size="400px" title="更新组合(先更新当日收益情况，再更新转入转出操作哦！)">
+      <el-form style="margin-left:20px" :model="addPortfolioForm" ref="addPortfolioForm" :rules="addPortfolioRules" label-width="100px" size="mini" @submit.native.prevent>
+        <el-form-item label="组合名称" prop="name">
+          <el-select v-model="addPortfolioForm.name" filterable allow-create @change="getPortfolioInfo" placeholder="请选择">
+            <el-option
+              v-for="portfolio in portfolioInfos"
+              :key="portfolio.id"
+              :label="portfolio.name"
+              :value="portfolio.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-show="false" v-model="addPortfolioForm.portfolioId"></el-input>
+        </el-form-item>
+        <el-form-item label="变动金额" prop="changeMoney">
+          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.changeMoney" style="width:180px"/>
+        </el-form-item>
+        <el-form-item label="变动类型" prop="type">
+          <el-radio v-model="addPortfolioForm.changeType" label="0">转入或转出</el-radio>
+          <el-radio v-model="addPortfolioForm.changeType" label="1">记录更新</el-radio>
+        </el-form-item>
+        <el-form-item label="组合类型" prop="type">
+          <el-radio v-model="addPortfolioForm.type" label="0">稳健</el-radio>
+          <el-radio v-model="addPortfolioForm.type" label="1">积极</el-radio>
+          <el-radio v-model="addPortfolioForm.type" label="2">定投</el-radio>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="addPortfolioForm.remark" style="width:180px"/>
+        </el-form-item>
+        <el-form-item style="text-align:left">
+          <el-button type="primary" @click="submitForm('addPortfolioForm')">添加</el-button>
+          <el-button @click="resetForm('addPortfolioForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+
+    </el-drawer>
+  </div>
+</template>
+
+<script>
+import { getPortfolioList, getPortfolioInfos, getPortfolioInfo, savePortfolioChange } from '@/api/portfolio'
+
+export default {
+  data() {
+    return {
+      portfolioList: [],
+      listLoading: true,
+      currentPage:1,
+      totalCount:1,
+      pageSize: 20,
+      addPortfolioDrawerVisible: false,
+      direction: 'rtl',
+      accountId: '1',
+      accountName: '且慢平台',
+      addPortfolioForm: {
+        portfolioId: '',
+        name: '',
+        changeMoney: '',
+        remark: '',
+        changeType: '1',
+        type: '0',
+        
+      },
+      addPortfolioRules: {
+        name: [
+          {required: true, message: "请输入组合名称", trigger: "blur"}
+        ]
+      },
+      bankWidth: '90px',
+      portfolioInfos: []
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      this.listLoading = true
+      getPortfolioList({"page": this.currentPage, "pageSize": this.pageSize, "accountId": this.accountId}).then(response => {
+        this.portfolioList = response.data.portfolioList
+        this.currentPage = response.data.currentPage
+        this.totalCount = response.data.totalNum
+        this.listLoading = false
+      })
+      getPortfolioInfos({"accountId": this.accountId}).then(response => {
+        this.portfolioInfos = response.data.portfolioInfoDTOS
+      })
+    },
+    handleSizeChange(val){
+      //改变每页显示的条数
+      this.pageSize = val
+      //注意：在改变每页显示的条数时，要将页码显示到第一页
+      this.currentPage = 1
+    },
+    handleCurrentChange(val){
+      //改变默认的页数
+      this.currentPage = val
+    },
+    submitForm(formName){
+      this.$refs[formName].validate((valid) =>{
+        if(valid){
+          savePortfolioChange({
+            "portfolioId": this.addPortfolioForm.portfolioId,
+            "name": this.addPortfolioForm.name,
+            "changeMoney": this.addPortfolioForm.changeMoney,
+            "remark": this.addPortfolioForm.remark,
+            "changeType": this.addPortfolioForm.changeType,
+            "accountId": this.accountId,
+            "accountName": this.accountName,
+            "type": this.addPortfolioForm.type
+          }).then(response => {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.addPortfolioDrawerVisible = false
+            this.fetchData()
+          })
+        }else{
+          this.$message.error("请填写全部内容后，再提交!!!")
+        }
+      })
+    },
+    resetForm(formName){
+      if(this.$refs[formName]){
+        this.$refs[formName].resetFields();
+      }
+    },
+    getPortfolioInfo(value){
+      getPortfolioInfo({"id": value}).then(response => {
+        const { data } = response
+        this.addPortfolioForm.portfolioId = data.id
+        this.addPortfolioForm.name = data.name
+        this.addPortfolioForm.type = data.type
+      })
+    },
+    getDetail(id){
+      this.$router.push({
+        path: "/assets/portfolio",
+        name: 'qie-man-detail',
+        params: {id: id}
+      })
+    }
+  }
+}
+</script>

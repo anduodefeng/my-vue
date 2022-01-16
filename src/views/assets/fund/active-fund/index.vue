@@ -79,7 +79,7 @@
     :total="totalCount"/>
 
     <el-drawer :visible.sync="addFundDrawerVisible" @close="$refs['addFundForm'].resetFields()" :direction="direction" 
-               size="400px" title="更新基金(先更新当日收益情况，再更新转入转出操作哦！)">
+               size="400px" title="更新基金">
       <el-form style="margin-left:90px" :model="addFundForm" ref="addFundForm" :rules="addFundRules" label-width="80px" size="mini" @submit.native.prevent>
         <el-form-item label="基金名称" prop="name">
           <el-select v-model="addFundForm.name" filterable allow-create @change="getFundInfo" placeholder="请选择">
@@ -143,7 +143,7 @@ export default {
         changeMoney: '',
         principal: '',
         type: '',
-        fundType: '0',
+        fundType: '1',
         remark: ''
       },
       addFundRules: {
@@ -167,13 +167,13 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getFundList({"page": this.currentPage, "pageSize": this.pageSize, "type": this.addFundForm.fundType}).then(response => {
+      getFundList({"page": this.currentPage, "pageSize": this.pageSize, "type": "1"}).then(response => {
         this.fundList = response.data.fundList
         this.currentPage = response.data.currentPage
         this.totalCount = response.data.totalNum
         this.listLoading = false
       })
-      getFundInfos({"fundType": this.addFundForm.fundType}).then(response => {
+      getFundInfos({"fundType": "1"}).then(response => {
         this.fundInfos = response.data.fundInfos
       })
     },
@@ -235,7 +235,7 @@ export default {
     },
     getDetail(code){
       this.$router.push({
-        path: "/assets/invest",
+        path: "/assets/fund",
         name: 'indexFundDetail',
         params: {code: code}
       })

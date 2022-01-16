@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'My Assets System Manager',
+  title: '资产管理',
 
   /**
    * @type {boolean} true | false
