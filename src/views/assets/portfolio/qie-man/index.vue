@@ -91,6 +91,9 @@
           <el-radio v-model="addPortfolioForm.type" label="1">积极</el-radio>
           <el-radio v-model="addPortfolioForm.type" label="2">定投</el-radio>
         </el-form-item>
+        <el-form-item label="变动时间">
+          <el-date-picker v-model="addPortfolioForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="addPortfolioForm.remark" style="width:180px"/>
         </el-form-item>
@@ -126,7 +129,7 @@ export default {
         remark: '',
         changeType: '1',
         type: '0',
-        
+        createTime: ''
       },
       addPortfolioRules: {
         name: [
@@ -174,7 +177,8 @@ export default {
             "changeType": this.addPortfolioForm.changeType,
             "accountId": this.accountId,
             "accountName": this.accountName,
-            "type": this.addPortfolioForm.type
+            "type": this.addPortfolioForm.type,
+            "createTime": this.addPortfolioForm.createTime
           }).then(response => {
             this.$message({
               message: '保存成功',

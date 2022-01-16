@@ -104,10 +104,11 @@
           <el-input-number :precision="2" :step="0.01" v-model="addFundForm.changeMoney" style="width:180px"/>
         </el-form-item>
         <el-form-item label="变动类型" prop="type">
-          <el-select v-model="addFundForm.type" filterable allow-create placeholder="请选择">
-            <el-option label="本金变动" value="0"></el-option>
-            <el-option label="资产更新" value="1"></el-option>
-          </el-select>
+          <el-radio v-model="addFundForm.type" label="0">转入或转出</el-radio>
+          <el-radio v-model="addFundForm.type" label="1">记录更新</el-radio>
+        </el-form-item>
+        <el-form-item label="变动时间">
+          <el-date-picker v-model="addFundForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="addFundForm.remark" style="width:180px"/>
@@ -144,7 +145,8 @@ export default {
         principal: '',
         type: '',
         fundType: '1',
-        remark: ''
+        remark: '',
+        createTime: ''
       },
       addFundRules: {
         name: [
@@ -198,7 +200,8 @@ export default {
             "changeMoney": this.addFundForm.changeMoney,
             "type": this.addFundForm.type,
             "fundType": this.addFundForm.fundType,
-            "remark": this.addFundForm.remark
+            "remark": this.addFundForm.remark,
+            "createTime": this.addFundForm.createTime
           }).then(response => {
             const {code} = response
             const {message} = response

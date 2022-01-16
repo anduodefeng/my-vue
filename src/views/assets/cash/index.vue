@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
     <el-button type="primary" style="margin:10px;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
+    <div style="width:1400px;height:300px;">
+      <div ref="cashPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      </div>
+      <div ref="cashBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="bankList"
@@ -73,7 +79,7 @@
 </template>
 
 <script>
-import { getBankNames, getList, saveCashDetail } from '@/api/cash'
+import { getBankNames, getList, saveCashDetail, getChart } from '@/api/cash'
 
 export default {
   data() {
@@ -103,11 +109,18 @@ export default {
         ]
       },
       bankWidth: '90px',
-      bankNames: []
+      bankNames: [],
+      colorList: [],
+      pieData: [],
+      bankNameBar: [],
+      bankValueBar: []
     }
   },
   created() {
     this.fetchData()
+  },
+  mounted(){
+    this.getPieData()
   },
   methods: {
     fetchData() {
@@ -121,6 +134,12 @@ export default {
       getBankNames().then(response => {
         this.bankNames = response.data.bankNames
       })
+    },
+    handleSizeChange(val){
+      //改变每页显示的条数
+      this.pageSize = val
+      //注意：在改变每页显示的条数时，要将页码显示到第一页
+      this.currentPage = 1
     },
     handleCurrentChange(val){
       //改变默认的页数
@@ -138,7 +157,10 @@ export default {
             const {code} = response
             const {message} = response
             if(code == 1000){
-              alert("保存成功")
+              this.$message({
+                message: '保存成功',
+                type: 'success'
+              })
               this.addBankDrawerVisible = false
               this.fetchData()
             }else{
@@ -162,6 +184,65 @@ export default {
         name: 'cashDetail',
         params: {bankName: bankName}
       })
+    },
+    getPieData(){
+      getChart().then(response => {
+        this.pieData = response.data.pieList
+        this.bankNameBar = response.data.bankNameList
+        this.bankValueBar = response.data.bankValueList
+        this.colorList = response.data.colorList
+        this.initCharts()
+      })
+    },
+    initCharts(){
+      const pieChart = this.$refs.cashPie
+      const barChart = this.$refs.cashBar
+
+      const myPieCharts = this.$echarts.init(pieChart)
+      const myBarCharts = this.$echarts.init(barChart)
+      const pieOption = {
+        tooltip:{
+          trigger: 'item',
+          formatter: "{b} : {c}({d}%)"
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '80%',
+            data: this.pieData
+          }
+        ]
+      };
+      const barOption = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line'
+          }
+        },
+        xAxis: {
+          type: 'category',
+          data: this.bankNameBar
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.bankValueBar,
+            type: 'bar',
+            itemStyle: {
+              normal: {
+                color: function(param){
+                  return param.data['color']
+                }
+              }
+            }
+          }
+        ]
+      };
+      myPieCharts.setOption(pieOption)
+      myBarCharts.setOption(barOption)
     }
   }
 }
