@@ -185,7 +185,7 @@ export const constantRoutes = [
         path: 'creditDetail',
         hidden: true,
         component: () => import('@/views/debt/credit-card/detail'),
-        name: 'creditIndex',
+        name: 'creditDetail',
         meta: { title: '信用卡', icon: 'credit'},
       },
       {

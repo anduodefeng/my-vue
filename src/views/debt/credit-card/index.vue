@@ -9,7 +9,7 @@
     </div>
     <el-table
       v-loading="listLoading"
-      :data="bankList"
+      :data="creditList"
       element-loading-text="Loading"
       border
       fit
@@ -25,14 +25,30 @@
           {{ scope.row.bankName }}
         </template>
       </el-table-column>
-      <el-table-column label="余额" align="center">
+      <el-table-column label="总额度" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.amount }}</span>
+          <span>{{ scope.row.limit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="截止时间">
+      <el-table-column align="center" label="剩余额度">
         <template slot-scope="scope">
-          <span>{{ scope.row.latestTime }}</span>
+          <span>{{ scope.row.leftAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="账单日">
+        <template slot-scope="scope">
+          <span>{{ scope.row.billDate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="还款日">
+        <template slot-scope="scope">
+          <span>{{ scope.row.repayDate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="距离还款日天数">
+        <template slot-scope="scope">
+          <span v-if="scope.row.leftBillDay <= 5" style="color:red;font-weight:bolder;">{{ scope.row.leftBillDay }}</span>
+          <span v-if="scope.row.leftBillDay > 5">{{ scope.row.leftBillDay }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -50,10 +66,10 @@
     :total="totalCount"/>
 
     <el-drawer :visible.sync="addBankDrawerVisible" @close="$refs['addBankForm'].resetFields()" :direction="direction" 
-               size="400px" title="添加银行卡">
+               size="400px" title="添加银行卡/变动记录">
       <el-form style="margin-left:90px" :model="addBankForm" ref="addBankForm" :rules="addBankRules" label-width="80px" size="mini" @submit.native.prevent>
         <el-form-item label="银行名称" prop="bankName">
-          <el-select v-model="addBankForm.bankName" filterable allow-create placeholder="请选择">
+          <el-select v-model="addBankForm.bankName" filterable allow-create @change="getCreditInfo" placeholder="请选择">
             <el-option
               v-for="item in bankNames"
               :key="item"
@@ -61,6 +77,15 @@
               :value="item">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="总额度">
+          <el-input type="number" v-model.number="addBankForm.limit" style="width:180px"/>
+        </el-form-item>
+        <el-form-item label="账单日">
+          <el-input type="number" v-model.number="addBankForm.billDay" style="width:180px"/>
+        </el-form-item>
+        <el-form-item label="还款日">
+          <el-input type="number" v-model.number="addBankForm.repayDay" style="width:180px"/>
         </el-form-item>
         <el-form-item label="变动金额" prop="changeMoney">
           <el-input type="number" v-model.number="addBankForm.changeMoney" style="width:180px"/>
@@ -79,12 +104,12 @@
 </template>
 
 <script>
-import { getBankNames, getList, saveCashDetail, getChart } from '@/api/cash'
+import { getBankNames, getList, getBankInfo, saveDetail } from '@/api/credit'
 
 export default {
   data() {
     return {
-      bankList: [],
+      creditList: [],
       listLoading: true,
       currentPage:1,
       totalCount:1,
@@ -94,7 +119,10 @@ export default {
       addBankForm: {
         bankName: '',
         changeMoney: '',
-        reason: ''
+        reason: '',
+        limit: '',
+        billDay: '',
+        repayDay: ''
       },
       addBankRules: {
         bankName: [
@@ -119,19 +147,24 @@ export default {
     this.fetchData()
   },
   mounted(){
-    this.getChartData()
+    // this.getChartData()
   },
   methods: {
     fetchData() {
       this.listLoading = true
       getList({"page": this.currentPage, "pageSize": this.pageSize}).then(response => {
-        this.bankList = response.data.cashList
+        this.creditList = response.data.creditCardList
         this.currentPage = response.data.currentPage
         this.totalCount = response.data.totalNum
         this.listLoading = false
       })
       getBankNames().then(response => {
         this.bankNames = response.data.bankNames
+      })
+    },
+    getCreditInfo(bankName){
+      getBankInfo(bankName).then(response => {
+        const {data} = response
       })
     },
     handleSizeChange(val){
@@ -148,23 +181,20 @@ export default {
     submitForm(formName){
       this.$refs[formName].validate((valid) =>{
         if(valid){
-          saveCashDetail({
+          saveDetail({
             "bankName": this.addBankForm.bankName,
             "changeMoney": this.addBankForm.changeMoney,
-            "reason": this.addBankForm.reason
+            "reason": this.addBankForm.reason,
+            "limit": this.addBankForm.limit,
+            "billDay": this.addBankForm.billDay,
+            "repayDay": this.addBankForm.repayDay
           }).then(response => {
-            const {code} = response
-            const {message} = response
-            if(code == 1000){
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              this.addBankDrawerVisible = false
-              this.fetchData()
-            }else{
-              alert(message)
-            }
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.addBankDrawerVisible = false
+            this.fetchData()
           })
         }else{
           alert("请填写全部内容后，在提交!!!")
@@ -179,18 +209,18 @@ export default {
     },
     getDetail(bankName){
       this.$router.push({
-        path: "/assets",
-        name: 'cashDetail',
+        path: "/debt",
+        name: 'creditDetail',
         params: {bankName: bankName}
       })
     },
     getChartData(){
-      getChart().then(response => {
-        this.pieData = response.data.pieList
-        this.bankNameBar = response.data.bankNameList
-        this.bankValueBar = response.data.bankValueList
-        this.initCharts()
-      })
+      // getChart().then(response => {
+      //   this.pieData = response.data.pieList
+      //   this.bankNameBar = response.data.bankNameList
+      //   this.bankValueBar = response.data.bankValueList
+      //   this.initCharts()
+      // })
     },
     initCharts(){
       const pieChart = this.$refs.cashPie

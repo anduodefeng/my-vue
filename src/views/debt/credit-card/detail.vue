@@ -23,6 +23,11 @@
           <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="备注" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remark }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="update_at" label="变动时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
@@ -40,7 +45,7 @@
 </template>
 
 <script>
-import { getCashDetail } from '@/api/cash'
+import { getDetail } from '@/api/credit'
 
 export default {
   data() {
@@ -59,7 +64,7 @@ export default {
   methods: {
     fetchData() {
       this.bankName = this.$route.params.bankName;
-      getCashDetail({
+      getDetail({
         "page": this.currentPage, 
         "pageSize": this.pageSize,
         "bankName": this.bankName
