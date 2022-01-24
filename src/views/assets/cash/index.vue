@@ -110,7 +110,6 @@ export default {
       },
       bankWidth: '90px',
       bankNames: [],
-      colorList: [],
       pieData: [],
       bankNameBar: [],
       bankValueBar: []
@@ -120,7 +119,7 @@ export default {
     this.fetchData()
   },
   mounted(){
-    this.getPieData()
+    this.getChartData()
   },
   methods: {
     fetchData() {
@@ -185,12 +184,11 @@ export default {
         params: {bankName: bankName}
       })
     },
-    getPieData(){
+    getChartData(){
       getChart().then(response => {
         this.pieData = response.data.pieList
         this.bankNameBar = response.data.bankNameList
         this.bankValueBar = response.data.bankValueList
-        this.colorList = response.data.colorList
         this.initCharts()
       })
     },
@@ -201,6 +199,11 @@ export default {
       const myPieCharts = this.$echarts.init(pieChart)
       const myBarCharts = this.$echarts.init(barChart)
       const pieOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "金额占比",
+        },
         tooltip:{
           trigger: 'item',
           formatter: "{b} : {c}({d}%)"
@@ -214,10 +217,15 @@ export default {
         ]
       };
       const barOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "银行卡金额分布"
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'line'
+            type: 'none'
           }
         },
         xAxis: {

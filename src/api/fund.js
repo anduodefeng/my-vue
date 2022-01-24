@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getChart(data){
+    return request({
+      url: '/fund/chart/'+data,
+      method: 'GET'
+    })
+  }
+
 export function getFundList(data){
     return request({
         url: '/fund/page',

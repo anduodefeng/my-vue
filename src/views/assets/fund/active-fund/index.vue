@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
     <el-button type="primary" style="margin:10px;" @click="addFundDrawerVisible=true">更新基金</el-button>
+    <div style="width:1400px;height:300px;">
+      <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      </div>
+      <div ref="fundBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="fundList"
@@ -124,7 +130,7 @@
 </template>
 
 <script>
-import { getFundList, getFundInfos, getFundInfo, saveFundDetail } from '@/api/fund'
+import { getChart, getFundList, getFundInfos, getFundInfo, saveFundDetail } from '@/api/fund'
 
 export default {
   data() {
@@ -160,8 +166,14 @@ export default {
         ]
       },
       bankWidth: '90px',
-      fundInfos: []
+      fundInfos: [],
+      pieData: [],
+      FundNameBar: [],
+      FundProfitRate: []
     }
+  },
+  mounted(){
+    this.getChartData()
   },
   created() {
     this.fetchData()
@@ -242,6 +254,75 @@ export default {
         name: 'indexFundDetail',
         params: {code: code}
       })
+    },
+    getChartData(){
+      getChart(1).then(response => {
+        const { data } = response;
+        this.pieData = data.pieList
+        this.FundNameBar = data.fundNameList
+        this.FundProfitRate = data.profitRateList
+        this.initCharts();
+      })
+    },
+    initCharts(){
+      const pieChart = this.$refs.fundPie
+      const barChart = this.$refs.fundBar
+
+      const myPieCharts = this.$echarts.init(pieChart)
+      const myBarCharts = this.$echarts.init(barChart)
+      const pieOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "各个基金占比",
+        },
+        tooltip:{
+          trigger: 'item',
+          formatter: "{b} : {c}({d}%)"
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '80%',
+            data: this.pieData
+          }
+        ]
+      };
+      const barOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "基金收益率"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'none'
+          }
+        },
+        xAxis: {
+          type: 'category',
+          data: this.FundNameBar
+        },
+        yAxis: {
+            type: 'value',
+          },
+        series: [
+          {
+            data: this.FundProfitRate,
+            type: 'bar',
+            itemStyle: {
+              normal: {
+                color: function(param){
+                  return param.data['color']
+                }
+              }
+            }
+          }
+        ]
+      };
+      myPieCharts.setOption(pieOption)
+      myBarCharts.setOption(barOption)
     }
   }
 }
