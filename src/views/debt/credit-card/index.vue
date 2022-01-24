@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-button type="primary" style="margin:10px;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
     <div style="width:1400px;height:300px;">
-      <div ref="cashPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      <div ref="PABBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>
-      <div ref="cashBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
+      <div ref="CMBBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>
     </div>
     <el-table
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { getBankNames, getList, getBankInfo, saveDetail } from '@/api/credit'
+import { getBankNames, getList, getBankInfo, saveDetail, getChart } from '@/api/credit'
 
 export default {
   data() {
@@ -138,16 +138,16 @@ export default {
       },
       bankWidth: '90px',
       bankNames: [],
-      pieData: [],
-      bankNameBar: [],
-      bankValueBar: []
+      monthBar:[],
+      cmbBar: [],
+      pabBar: []
     }
   },
   created() {
     this.fetchData()
   },
   mounted(){
-    // this.getChartData()
+    this.getChartData()
   },
   methods: {
     fetchData() {
@@ -215,42 +215,26 @@ export default {
       })
     },
     getChartData(){
-      // getChart().then(response => {
-      //   this.pieData = response.data.pieList
-      //   this.bankNameBar = response.data.bankNameList
-      //   this.bankValueBar = response.data.bankValueList
-      //   this.initCharts()
-      // })
+      getChart().then(response => {
+        this.monthBar = response.data.monthList
+        this.cmbBar = response.data.CMBList
+        this.pabBar = response.data.PABList
+
+        this.initCharts()
+      })
     },
     initCharts(){
-      const pieChart = this.$refs.cashPie
-      const barChart = this.$refs.cashBar
+      const pabBar = this.$refs.PABBar
+      const cmbBar = this.$refs.CMBBar
 
-      const myPieCharts = this.$echarts.init(pieChart)
-      const myBarCharts = this.$echarts.init(barChart)
-      const pieOption = {
+      const pabCharts = this.$echarts.init(pabBar)
+      const cmbCharts = this.$echarts.init(cmbBar)
+      
+      const cmbOption = {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "金额占比",
-        },
-        tooltip:{
-          trigger: 'item',
-          formatter: "{b} : {c}({d}%)"
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: '80%',
-            data: this.pieData
-          }
-        ]
-      };
-      const barOption = {
-        //动画时长 2000ms
-        animationDuration: 2000,
-        title:{
-          text: "银行卡金额分布"
+          text: "招商银行消费情况"
         },
         tooltip: {
           trigger: 'axis',
@@ -260,14 +244,14 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: this.bankNameBar
+          data: this.monthBar
         },
         yAxis: {
           type: 'value'
         },
         series: [
           {
-            data: this.bankValueBar,
+            data: this.cmbBar,
             type: 'bar',
             itemStyle: {
               normal: {
@@ -279,8 +263,41 @@ export default {
           }
         ]
       };
-      myPieCharts.setOption(pieOption)
-      myBarCharts.setOption(barOption)
+      const pabOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "平安银行消费情况"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'none'
+          }
+        },
+        xAxis: {
+          type: 'category',
+          data: this.monthBar
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.pabBar,
+            type: 'bar',
+            itemStyle: {
+              normal: {
+                color: function(param){
+                  return param.data['color']
+                }
+              }
+            }
+          }
+        ]
+      }
+      cmbCharts.setOption(cmbOption)
+      pabCharts.setOption(pabOption)
     }
   }
 }

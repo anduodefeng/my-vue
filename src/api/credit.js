@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
-// export function getChart(){
-//   return request({
-//     url: '/cash/chart',
-//     method: 'GET'
-//   })
-// }
+export function getChart(){
+  return request({
+    url: '/creditCard/chart',
+    method: 'GET'
+  })
+}
 
 export function getList(data) {
   return request({
