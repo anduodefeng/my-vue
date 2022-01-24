@@ -150,7 +150,7 @@ export default {
         changeMoney: '',
         principal: '',
         type: '',
-        fundType: '0',
+        fundType: '2',
         remark: '',
         createTime: ''
       },
@@ -168,8 +168,8 @@ export default {
       bankWidth: '90px',
       fundInfos: [],
       pieData: [],
-      FundNameBar: [],
-      FundProfitRate: []
+      fundNameBar: [],
+      fundProfitRate: []
     }
   },
   mounted(){
@@ -259,8 +259,8 @@ export default {
       getChart(0).then(response => {
         const { data } = response;
         this.pieData = data.pieList
-        this.FundNameBar = data.fundNameList
-        this.FundProfitRate = data.profitRateList
+        this.fundNameBar = data.fundNameList
+        this.fundProfitRate = data.profitRateList
         this.initCharts();
       })
     },
@@ -302,14 +302,14 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: this.FundNameBar
+          data: this.fundNameBar
         },
         yAxis: {
             type: 'value',
           },
         series: [
           {
-            data: this.FundProfitRate,
+            data: this.fundProfitRate,
             type: 'bar',
             itemStyle: {
               normal: {

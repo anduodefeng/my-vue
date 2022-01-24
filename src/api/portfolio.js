@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getChart(data){
+    return request({
+      url: '/portfolio/chart/'+data,
+      method: 'GET'
+    })
+}
+
 export function getPortfolioList(data){
     return request({
         url: '/portfolio/page',

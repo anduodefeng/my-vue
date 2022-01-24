@@ -5,7 +5,7 @@ export function getChart(data){
       url: '/fund/chart/'+data,
       method: 'GET'
     })
-  }
+}
 
 export function getFundList(data){
     return request({

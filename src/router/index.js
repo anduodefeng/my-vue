@@ -105,6 +105,32 @@ export const constantRoutes = [
             component: () => import('@/views/assets/fund/active-fund/detail'),
             meta: { title: '主动基金', icon: 'money'}
           },
+          {
+            path: 'monetaryFund',
+            name: 'monetaryFund',
+            component: () => import('@/views/assets/fund/monetary-fund/index'),
+            meta: { title: '货币基金', icon: 'money'}
+          },
+          {
+            path: 'monetaryFundDetail',
+            name: 'monetaryFundDetail',
+            hidden: true,
+            component: () => import('@/views/assets/fund/monetary-fund/detail'),
+            meta: { title: '货币基金', icon: 'money'}
+          },
+          {
+            path: 'ETFFund',
+            name: 'ETFFund',
+            component: () => import('@/views/assets/fund/etf-fund/index'),
+            meta: { title: 'ETF基金', icon: 'money'}
+          },
+          {
+            path: 'ETFFundDetail',
+            name: 'ETFFundDetail',
+            hidden: true,
+            component: () => import('@/views/assets/fund/etf-fund/detail'),
+            meta: { title: 'ETF基金', icon: 'money'}
+          },
         ]
       },
       {
@@ -138,7 +164,7 @@ export const constantRoutes = [
             hidden: true,
             component: () => import('@/views/assets/portfolio/qie-man/detail'),
             meta: { title: '且慢平台', icon: 'money'}
-          },
+          }
         ]
       }
     ]
@@ -146,22 +172,26 @@ export const constantRoutes = [
   {
     path: '/debt',
     component: Layout,
-    redirect: '/nested/credit',
-    meta: {
-      title: '负债',
-      icon: 'debt'
-    },
+    redirect: '/debt/creditIndex/',
+    meta: { title: '负债', icon: 'debt' },
     children: [
       {
-        path: 'credit',
-        component: () => import('@/views/nested/menu1/index'),
-        name: 'Credit',
+        path: 'creditIndex',
+        component: () => import('@/views/debt/credit-card/index'),
+        name: 'creditIndex',
         meta: { title: '信用卡', icon: 'credit'},
       },
       {
-        path: 'other',
-        component: () => import('@/views/nested/menu1/index'), 
-        name: 'Other',
+        path: 'creditDetail',
+        hidden: true,
+        component: () => import('@/views/debt/credit-card/detail'),
+        name: 'creditIndex',
+        meta: { title: '信用卡', icon: 'credit'},
+      },
+      {
+        path: 'otherDebt',
+        component: () => import('@/views/debt/other-debt/index'), 
+        name: 'otherDebt',
         meta: { title: '其他', icon: 'other' },
       }
     ]
