@@ -39,6 +39,13 @@ export function savePortfolioChange(data){
     })
 }
 
+export function getDetailChart(data){
+    return request({
+        url: '/portfolio/detail/chart/'+data,
+        method: 'GET',
+    })
+}
+
 export function getPortfolioDetail(data){
     return request({
         url: '/portfolio/detailPage',

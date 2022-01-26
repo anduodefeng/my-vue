@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div style="border:1px solid black;width:1400px;height:300px;">
+    <div style=";width:1400px;height:300px;">
       <div ref="detailBar" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="detailLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
     </div>
