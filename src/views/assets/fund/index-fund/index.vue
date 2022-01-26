@@ -31,16 +31,6 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="基金净值">
-        <template slot-scope="scope">
-          <span>{{ scope.row.worth }}</span>
-        </template>
-      </el-table-column>
-            <el-table-column align="center" label="基金份额">
-        <template slot-scope="scope">
-          <span>{{ scope.row.shares }}</span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="基金价值">
         <template slot-scope="scope">
           <span>{{ scope.row.money }}</span>
@@ -48,15 +38,15 @@
       </el-table-column>
       <el-table-column align="center" label="盈利">
         <template slot-scope="scope">
-          <span v-if="scope.row.profit > 0" style="color:red">{{ scope.row.profit }}</span>
-          <span v-if="scope.row.profit < 0" style="color:green">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder">{{ scope.row.profit }}</span>
           <span v-if="scope.row.profit == 0">{{ scope.row.profit }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="收益率">
         <template slot-scope="scope">
-          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
-          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate > 0" style="color:red;font-weight:bolder">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green;font-weight:bolder">{{ scope.row.profitRate }}%</span>
           <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
         </template>
       </el-table-column>
@@ -99,12 +89,6 @@
         </el-form-item>
         <el-form-item label="基金代码" prop="code">
           <el-input v-model="addFundForm.code" style="width:180px"/>
-        </el-form-item>
-        <el-form-item label="基金净值" prop="worth">
-          <el-input-number :precision="4" :step="0.0001" v-model="addFundForm.worth" style="width:180px"/>
-        </el-form-item>
-        <el-form-item label="基金份额" prop="shares">
-          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.shares" style="width:180px"/>
         </el-form-item>
         <el-form-item label="变动金额" prop="changeMoney">
           <el-input-number :precision="2" :step="0.01" v-model="addFundForm.changeMoney" style="width:180px"/>
@@ -150,7 +134,7 @@ export default {
         changeMoney: '',
         principal: '',
         type: '',
-        fundType: '2',
+        fundType: '0',
         remark: '',
         createTime: ''
       },
@@ -243,6 +227,7 @@ export default {
       getFundInfo({"code": value}).then(response => {
         const { data } = response
         this.addFundForm.code = data.code
+        this.addFundForm.name = data.name
         this.addFundForm.worth = data.worth
         this.addFundForm.shares = data.shares
         this.addFundForm.principal = data.principal
@@ -306,6 +291,9 @@ export default {
         },
         yAxis: {
             type: 'value',
+            axisLabel: {
+              formatter: '{value}%'
+            }
           },
         series: [
           {

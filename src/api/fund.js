@@ -39,6 +39,12 @@ export function saveFundDetail(data){
     })
 }
 
+export function getDetailChart(data){
+    return request({
+        url: '/fund/detail/chart/'+data,
+        method: 'GET',
+    })
+}
 export function getFundDetail(data){
     return request({
         url: '/fund/detailPage',

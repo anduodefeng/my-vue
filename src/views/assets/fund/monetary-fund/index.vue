@@ -150,7 +150,7 @@ export default {
         changeMoney: '',
         principal: '',
         type: '',
-        fundType: '0',
+        fundType: '2',
         remark: '',
         createTime: ''
       },
