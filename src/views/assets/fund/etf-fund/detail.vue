@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <div ref="detailBar" style="border:1px solid black;width:1400px;height:300px; margin-bottom:10px;">
+    <div style="border:1px solid black;width:1400px;height:300px;">
+      <div ref="detailBar" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
+      <div ref="detailLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
     </div>
     <div>变动详情</div>
     <el-table
@@ -79,7 +81,8 @@ export default {
       totalCount:1,
       pageSize: 30,
       dateList:[],
-      dataList:[]
+      dataList:[],
+      rateList:[]
     }
   },
   created() {
@@ -123,14 +126,16 @@ export default {
         const {data} = response
         this.dateList = data.dateList
         this.dataList = data.dataList
-
+        this.rateList = data.rateList
         this.initCharts()
       })
     },
     initCharts(){
       const chart = this.$refs.detailBar
+      const lineChart = this.$refs.detailLine
       if(chart){
         const myCharts = this.$echarts.init(chart)
+        const myLineCharts = this.$echarts.init(lineChart)
         const option = {
           title: {
             text: '基金日常变动'
@@ -161,6 +166,35 @@ export default {
                 borderColor: "#eb5454",
                 borderColor0: "#47b262",
                 borderWidth: 1
+              }
+            }
+          ]
+        }
+        const lineOption = {
+          title: {
+            text: '基金收益率'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          xAxis: {
+            type: 'category',
+            data: this.dateList
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: "收益率",
+              type: 'line',
+              data: this.rateList,
+              animationDuration: 2000,
+              lineStyle: {
+                color: '#46cdcf'
               }
             }
           ]
