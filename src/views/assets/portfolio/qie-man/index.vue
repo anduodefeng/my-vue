@@ -225,7 +225,7 @@ export default {
       })
     },
     getChartData(){
-      getChart(0).then(response => {
+      getChart(1).then(response => {
         const { data } = response;
         this.pieData = data.pieList
         this.portfolioNameBar = data.portfolioNameList

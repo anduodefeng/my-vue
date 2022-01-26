@@ -65,7 +65,7 @@ export default {
   data() {
     return {
       detailList: [],
-      code: '',
+      id: '',
       listLoading: true,
       currentPage:1,
       totalCount:1,
@@ -112,7 +112,7 @@ export default {
       }
     },
     getDetailChart(){
-      getDetailChart(this.code).then(response => {
+      getDetailChart(this.id).then(response => {
         const {data} = response
         this.dateList = data.dateList
         this.dataList = data.dataList
