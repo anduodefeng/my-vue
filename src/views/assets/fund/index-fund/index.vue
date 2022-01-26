@@ -165,13 +165,13 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getFundList({"page": this.currentPage, "pageSize": this.pageSize, "type": this.addFundForm.fundType}).then(response => {
+      getFundList({"page": this.currentPage, "pageSize": this.pageSize, "type": "0"}).then(response => {
         this.fundList = response.data.fundList
         this.currentPage = response.data.currentPage
         this.totalCount = response.data.totalNum
         this.listLoading = false
       })
-      getFundInfos({"fundType": this.addFundForm.fundType}).then(response => {
+      getFundInfos({"fundType": "0"}).then(response => {
         this.fundInfos = response.data.fundInfos
       })
     },
@@ -191,8 +191,6 @@ export default {
           saveFundDetail({
             "code": this.addFundForm.code,
             "name": this.addFundForm.name,
-            "worth": this.addFundForm.worth,
-            "shares": this.addFundForm.shares,
             "changeMoney": this.addFundForm.changeMoney,
             "type": this.addFundForm.type,
             "fundType": this.addFundForm.fundType,
@@ -227,9 +225,6 @@ export default {
       getFundInfo({"code": value}).then(response => {
         const { data } = response
         this.addFundForm.code = data.code
-        this.addFundForm.name = data.name
-        this.addFundForm.worth = data.worth
-        this.addFundForm.shares = data.shares
         this.addFundForm.principal = data.principal
       })
     },
