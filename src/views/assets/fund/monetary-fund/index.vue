@@ -295,6 +295,7 @@ export default {
           {
             data: this.fundProfitRate,
             type: 'bar',
+            barWidth: '50%',
             itemStyle: {
               normal: {
                 color: function(param){

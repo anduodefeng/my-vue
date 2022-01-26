@@ -225,6 +225,7 @@ export default {
       getFundInfo({"code": value}).then(response => {
         const { data } = response
         this.addFundForm.code = data.code
+        this.addFundForm.name = data.name
         this.addFundForm.principal = data.principal
       })
     },
@@ -294,6 +295,7 @@ export default {
           {
             data: this.fundProfitRate,
             type: 'bar',
+            barWidth: '50%',
             itemStyle: {
               normal: {
                 color: function(param){

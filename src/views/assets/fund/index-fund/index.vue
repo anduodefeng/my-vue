@@ -225,6 +225,7 @@ export default {
       getFundInfo({"code": value}).then(response => {
         const { data } = response
         this.addFundForm.code = data.code
+        this.addFundForm.name = data.name
         this.addFundForm.principal = data.principal
       })
     },
@@ -254,7 +255,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "各个基金占比",
+          text: "基金占比",
         },
         tooltip:{
           trigger: 'item',
@@ -294,6 +295,7 @@ export default {
           {
             data: this.fundProfitRate,
             type: 'bar',
+            barWidth: '50%',
             itemStyle: {
               normal: {
                 color: function(param){
