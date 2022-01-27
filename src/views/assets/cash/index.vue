@@ -196,8 +196,8 @@ export default {
       const pieChart = this.$refs.cashPie
       const barChart = this.$refs.cashBar
 
-      const myPieCharts = this.$echarts.init(pieChart)
-      const myBarCharts = this.$echarts.init(barChart)
+      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
+      const myBarCharts = this.$echarts.init(barChart, 'macarons')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -238,14 +238,7 @@ export default {
         series: [
           {
             data: this.bankValueBar,
-            type: 'bar',
-            itemStyle: {
-              normal: {
-                color: function(param){
-                  return param.data['color']
-                }
-              }
-            }
+            type: 'bar'
           }
         ]
       };

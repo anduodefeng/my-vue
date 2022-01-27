@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 
 import echarts from 'echarts'
+import 'echarts/theme/macarons'
 
 import '@/icons' // icon
 import '@/permission' // permission control

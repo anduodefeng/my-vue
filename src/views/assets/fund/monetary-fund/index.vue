@@ -249,8 +249,8 @@ export default {
       const pieChart = this.$refs.fundPie
       const barChart = this.$refs.fundBar
 
-      const myPieCharts = this.$echarts.init(pieChart)
-      const myBarCharts = this.$echarts.init(barChart)
+      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
+      const myBarCharts = this.$echarts.init(barChart, 'macarons')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,

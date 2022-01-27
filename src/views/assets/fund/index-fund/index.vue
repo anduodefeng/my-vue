@@ -4,9 +4,8 @@
     <div style="width:1400px;height:300px;">
       <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>
-      <div ref="fundBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
-      </div>
     </div>
+    <div ref="fundLine" style="width:1400px;height:400px; margin-bottom:10px;float:left"></div>
     <el-table
       v-loading="listLoading"
       :data="fundList"
@@ -152,8 +151,9 @@ export default {
       bankWidth: '90px',
       fundInfos: [],
       pieData: [],
-      fundNameBar: [],
-      fundProfitRate: []
+      fundNameList: [],
+      dateList:[],
+      fundSeries: []
     }
   },
   mounted(){
@@ -240,22 +240,29 @@ export default {
       getChart(0).then(response => {
         const { data } = response;
         this.pieData = data.pieList
-        this.fundNameBar = data.fundNameList
-        this.fundProfitRate = data.profitRateList
+        this.fundNameList = data.fundNameList
+        this.dateList = data.dateList
+        this.fundSeries = data.fundSeries
         this.initCharts();
       })
     },
     initCharts(){
       const pieChart = this.$refs.fundPie
-      const barChart = this.$refs.fundBar
+      const lineChart = this.$refs.fundLine
 
-      const myPieCharts = this.$echarts.init(pieChart)
-      const myBarCharts = this.$echarts.init(barChart)
+      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
+      const myLineCharts = this.$echarts.init(lineChart, 'macarons')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
           text: "基金占比",
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
         tooltip:{
           trigger: 'item',
@@ -264,26 +271,33 @@ export default {
         series: [
           {
             type: 'pie',
-            radius: '80%',
+            radius: '60%',
             data: this.pieData
           }
         ]
       };
-      const barOption = {
+      const lineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
           text: "基金收益率"
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'none'
-          }
+          trigger: 'axis'
+        },
+        legend: {
+          data: this.fundNameList,
+          left: 100
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: this.fundNameBar
+          data: this.dateList
         },
         yAxis: {
             type: 'value',
@@ -291,23 +305,10 @@ export default {
               formatter: '{value}%'
             }
           },
-        series: [
-          {
-            data: this.fundProfitRate,
-            type: 'bar',
-            barWidth: '50%',
-            itemStyle: {
-              normal: {
-                color: function(param){
-                  return param.data['color']
-                }
-              }
-            }
-          }
-        ]
+        series: this.fundSeries
       };
       myPieCharts.setOption(pieOption)
-      myBarCharts.setOption(barOption)
+      myLineCharts.setOption(lineOption)
     }
   }
 }
