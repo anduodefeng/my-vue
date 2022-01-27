@@ -2,10 +2,8 @@
   <div class="app-container">
     <el-button type="primary" style="margin:10px;" @click="addPortfolioDrawerVisible=true">更新组合</el-button>
     <div style="width:1400px;height:300px;">
-      <div ref="portfolioPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
-      </div>
-      <div ref="portfolioBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
-      </div>
+      <div ref="portfolioPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
+      <div ref="portfolioLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
     </div>
     <el-table
       v-loading="listLoading"
@@ -33,8 +31,8 @@
       </el-table-column>
       <el-table-column align="center" label="盈利">
         <template slot-scope="scope">
-          <span v-if="scope.row.profit > 0" style="color:red">{{ scope.row.profit }}</span>
-          <span v-if="scope.row.profit < 0" style="color:green">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder">{{ scope.row.profit }}</span>
           <span v-if="scope.row.profit == 0">{{ scope.row.profit }}</span>
         </template>
       </el-table-column>
@@ -145,8 +143,8 @@ export default {
       bankWidth: '90px',
       portfolioInfos: [],
       pieData: [],
-      portfolioNameBar: [],
-      portfolioProfitRate: []
+      dateList: [],
+      totalAmount: []
     }
   },
   mounted(){
@@ -228,17 +226,17 @@ export default {
       getChart(1).then(response => {
         const { data } = response;
         this.pieData = data.pieList
-        this.portfolioNameBar = data.portfolioNameList
-        this.portfolioProfitRate = data.profitRateList
+        this.dateList = data.dateList
+        this.totalAmount = data.totalAmount
         this.initCharts();
       })
     },
     initCharts(){
       const pieChart = this.$refs.portfolioPie
-      const barChart = this.$refs.portfolioBar
+      const lineChart = this.$refs.portfolioLine
 
-      const myPieCharts = this.$echarts.init(pieChart)
-      const myBarCharts = this.$echarts.init(barChart)
+      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
+      const myLineCharts = this.$echarts.init(lineChart, 'macarons')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -257,41 +255,38 @@ export default {
           }
         ]
       };
-      const barOption = {
+      const lineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "基金收益率"
+          text: "基金组合总资产"
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'none'
-          }
+          trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: this.fundNameBar
+          data: this.dateList
         },
         yAxis: {
             type: 'value',
+
           },
         series: [
           {
-            data: this.fundProfitRate,
-            type: 'bar',
-            itemStyle: {
-              normal: {
-                color: function(param){
-                  return param.data['color']
-                }
-              }
-            }
+            data: this.totalAmount,
+            type: 'line',
           }
         ]
       };
       myPieCharts.setOption(pieOption)
-      myBarCharts.setOption(barOption)
+      myLineCharts.setOption(lineOption)
     }
   }
 }

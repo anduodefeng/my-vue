@@ -202,7 +202,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "金额占比",
+          text: "余额占比",
         },
         tooltip:{
           trigger: 'item',
@@ -220,7 +220,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "银行卡金额分布"
+          text: "银行卡余额"
         },
         tooltip: {
           trigger: 'axis',
