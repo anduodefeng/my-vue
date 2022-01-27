@@ -2,10 +2,9 @@
   <div class="app-container">
     <el-button type="primary" style="margin:10px;" @click="addFundDrawerVisible=true">更新基金</el-button>
     <div style="width:1400px;height:300px;">
-      <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
-      </div>
+      <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
+      <div ref="totalLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
     </div>
-    <div ref="fundLine" style="width:1400px;height:400px; margin-bottom:10px;float:left"></div>
     <el-table
       v-loading="listLoading"
       :data="fundList"
@@ -153,7 +152,7 @@ export default {
       pieData: [],
       fundNameList: [],
       dateList:[],
-      fundSeries: []
+      totalAmount: []
     }
   },
   mounted(){
@@ -242,16 +241,16 @@ export default {
         this.pieData = data.pieList
         this.fundNameList = data.fundNameList
         this.dateList = data.dateList
-        this.fundSeries = data.fundSeries
+        this.totalAmount = data.totalAmount
         this.initCharts();
       })
     },
     initCharts(){
       const pieChart = this.$refs.fundPie
-      const lineChart = this.$refs.fundLine
+      const totalLine = this.$refs.totalLine
 
       const myPieCharts = this.$echarts.init(pieChart, 'macarons')
-      const myLineCharts = this.$echarts.init(lineChart, 'macarons')
+      const totalLineCharts = this.$echarts.init(totalLine, 'macarons')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -275,19 +274,15 @@ export default {
             data: this.pieData
           }
         ]
-      };
-      const lineOption = {
+      }
+      const totalLineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "基金收益率"
+          text: "指数基金总资产"
         },
         tooltip: {
           trigger: 'axis'
-        },
-        legend: {
-          data: this.fundNameList,
-          left: 100
         },
         grid: {
             left: '3%',
@@ -301,14 +296,17 @@ export default {
         },
         yAxis: {
             type: 'value',
-            axisLabel: {
-              formatter: '{value}%'
-            }
+
           },
-        series: this.fundSeries
+        series: [
+          {
+            data: this.totalAmount,
+            type: 'line'
+          }
+        ]
       };
       myPieCharts.setOption(pieOption)
-      myLineCharts.setOption(lineOption)
+      totalLineCharts.setOption(totalLineOption)
     }
   }
 }
