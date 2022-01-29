@@ -18,12 +18,12 @@
         <span v-if="yesterdayProfit == 0 " class="infoNum">{{ yesterdayProfit }}</span>
       </div>
     </div>
-    <div ref="totalPie" class="chartDiv"></div>
-    <div ref="totalLine" class="chartDiv">总资产变化折线图</div>
-    <div class="chartDiv">指数基金收益率变化折线图</div>
-    <div class="chartDiv">主动基金收益率变化折线图</div>
-    <div class="chartDiv">稳健组合收益率变化折线图</div>
-    <div class="chartDiv">积极增值组合收益率变化折线图</div>
+    <div ref = "totalPie" class="chartDiv"></div>
+    <div ref = "totalLine" class="chartDiv"></div>
+    <div ref = "indexFundLine" class="chartDiv"></div>
+    <div ref = "activeFundLine" class="chartDiv"></div>
+    <div ref = "robustLine" class="chartDiv"></div>
+    <div ref = "aggressiveLine" class="chartDiv"></div>
   </div>
 </template>
 
@@ -45,7 +45,16 @@ export default {
       yesterdayProfit: 0,
       pieData:[],
       dateList:[],
-      moneyList:[]
+      moneyList:[],
+      totalPrincipal: [],
+      indexFundName: [],
+      indexFundLine: [],
+      activeFundName: [],
+      activeFundLine: [],
+      robustName: [],
+      robustLine: [],
+      aggressiveName: [],
+      aggressiveLine: []
     }
   },
   mounted(){
@@ -61,16 +70,32 @@ export default {
         this.pieData = data.pieList
         this.dateList = data.dateList
         this.moneyList = data.moneyList
-
+        this.totalPrincipal = data.principalList
+        this.indexFundName = data.indexFundNameList
+        this.indexFundLine = data.indexFundLine
+        this.activeFundName = data.activeFundNameList
+        this.activeFundLine = data.activeFundLine
+        this.robustName = data.robustPortfolioNameList
+        this.robustLine = data.robustPortfolioLine
+        this.aggressiveName = data.aggressivePortfolioNameList
+        this.aggressiveLine = data.aggressivePortfolioLine
         this.initCharts()
       })
     },
     initCharts(){
       const pieChart = this.$refs.totalPie
       const lineChart = this.$refs.totalLine
+      const indexFund = this.$refs.indexFundLine
+      const activeFund = this.$refs.activeFundLine
+      const robustPortfolio = this.$refs.robustLine
+      const aggressivePortfolio = this.$refs.aggressiveLine
 
-      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
-      const myLineCharts = this.$echarts.init(lineChart, 'macarons')
+      const myPieCharts = this.$echarts.init(pieChart, 'walden')
+      const myLineCharts = this.$echarts.init(lineChart, 'walden')
+      const myIndexFundCharts = this.$echarts.init(indexFund, 'walden')
+      const myActiveFundCharts = this.$echarts.init(activeFund, 'walden');
+      const myRobustPortfolioCharts = this.$echarts.init(robustPortfolio, 'walden')
+      const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden');
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -96,7 +121,13 @@ export default {
           text: "总资产变化"
         },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: ['总资产', '总成本']
         },
         grid: {
             left: '3%',
@@ -114,13 +145,154 @@ export default {
           },
         series: [
           {
+            name: '总资产',
             data: this.moneyList,
+            type: 'line',
+          },
+          {
+            name: '总成本',
+            data: this.totalPrincipal,
             type: 'line',
           }
         ]
       };
+      const indexLineOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "指数基金收益率"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: this.indexFundName,
+          left: 200
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: this.dateList
+        },
+        yAxis: {
+            type: 'value',
+
+          },
+        series: this.indexFundLine
+      };
+      const activeLineOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "主动基金收益率"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: this.activeFundName,
+          left: 150,
+          top: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: this.dateList
+        },
+        yAxis: {
+            type: 'value',
+
+          },
+        series: this.activeFundLine
+      };
+      const robustLineOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "稳健组合收益率"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: this.robustName,
+          left: 150,
+          top: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: this.dateList
+        },
+        yAxis: {
+            type: 'value',
+
+          },
+        series: this.robustLine
+      };
+      const aggressiveLineOption = {
+        //动画时长 2000ms
+        animationDuration: 2000,
+        title:{
+          text: "积极组合收益率"
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: this.aggressiveName,
+          left: 150,
+          top: 10
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          data: this.dateList
+        },
+        yAxis: {
+            type: 'value',
+
+          },
+        series: this.aggressiveLine
+      };
       myPieCharts.setOption(pieOption)
       myLineCharts.setOption(lineOption)
+      myIndexFundCharts.setOption(indexLineOption)
+      myActiveFundCharts.setOption(activeLineOption)
+      myRobustPortfolioCharts.setOption(robustLineOption)
+      myAggressivePortfolioCharts.setOption(aggressiveLineOption)
     }
   },
 }
@@ -143,10 +315,10 @@ export default {
   float:left;
 }
 .chartDiv{
-  border:1px solid black; 
-  width:600px; 
-  height:300px;
-  float:left;
+  border:0px dotted black; 
+  width:1400px; 
+  height:400px;
+  margin-top: 30px;
 }
 .info{
   line-height:50px;

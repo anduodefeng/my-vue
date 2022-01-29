@@ -144,7 +144,8 @@ export default {
       portfolioInfos: [],
       pieData: [],
       dateList: [],
-      totalAmount: []
+      totalAmount: [],
+      totalPrincipal: [],
     }
   },
   mounted(){
@@ -228,6 +229,7 @@ export default {
         this.pieData = data.pieList
         this.dateList = data.dateList
         this.totalAmount = data.totalAmount
+        this.totalPrincipal = data.totalPrincipal
         this.initCharts();
       })
     },
@@ -235,8 +237,8 @@ export default {
       const pieChart = this.$refs.portfolioPie
       const lineChart = this.$refs.portfolioLine
 
-      const myPieCharts = this.$echarts.init(pieChart, 'macarons')
-      const myLineCharts = this.$echarts.init(lineChart, 'macarons')
+      const myPieCharts = this.$echarts.init(pieChart, 'walden')
+      const myLineCharts = this.$echarts.init(lineChart, 'walden')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -262,7 +264,13 @@ export default {
           text: "基金组合总资产"
         },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: ['总资产', '总成本']
         },
         grid: {
             left: '3%',
@@ -280,7 +288,13 @@ export default {
           },
         series: [
           {
+            name: '总资产',
             data: this.totalAmount,
+            type: 'line'
+          },
+          {
+            name: '总成本',
+            data: this.totalPrincipal,
             type: 'line'
           }
         ]

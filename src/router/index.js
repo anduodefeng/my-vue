@@ -117,20 +117,7 @@ export const constantRoutes = [
             hidden: true,
             component: () => import('@/views/assets/fund/monetary-fund/detail'),
             meta: { title: '货币基金', icon: 'money'}
-          },
-          {
-            path: 'ETFFund',
-            name: 'ETFFund',
-            component: () => import('@/views/assets/fund/etf-fund/index'),
-            meta: { title: 'ETF基金', icon: 'money'}
-          },
-          {
-            path: 'ETFFundDetail',
-            name: 'ETFFundDetail',
-            hidden: true,
-            component: () => import('@/views/assets/fund/etf-fund/detail'),
-            meta: { title: 'ETF基金', icon: 'money'}
-          },
+          }
         ]
       },
       {

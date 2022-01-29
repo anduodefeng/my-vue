@@ -124,8 +124,8 @@ export default {
       const chart = this.$refs.detailBar
       const lineChart = this.$refs.detailLine
       if(chart){
-        const myCharts = this.$echarts.init(chart, 'macarons')
-        const myLineCharts = this.$echarts.init(lineChart, 'macarons')
+        const myCharts = this.$echarts.init(chart, 'walden')
+        const myLineCharts = this.$echarts.init(lineChart, 'walden')
         const option = {
           title: {
             text: '基金日常变动'
