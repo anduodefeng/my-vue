@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="cashPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>

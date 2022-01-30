@@ -19,6 +19,7 @@
       </div>
     </div>
     <div ref = "totalPie" class="chartDiv"></div>
+    <div ref = "monthCalendar" class="chartDiv"></div>
     <div ref = "totalLine" class="chartDiv"></div>
     <div ref = "indexFundLine" class="chartDiv"></div>
     <div ref = "activeFundLine" class="chartDiv"></div>
@@ -54,7 +55,9 @@ export default {
       robustName: [],
       robustLine: [],
       aggressiveName: [],
-      aggressiveLine: []
+      aggressiveLine: [],
+
+      calendarList: []
     }
   },
   mounted(){
@@ -79,6 +82,7 @@ export default {
         this.robustLine = data.robustPortfolioLine
         this.aggressiveName = data.aggressivePortfolioNameList
         this.aggressiveLine = data.aggressivePortfolioLine
+        this.calendarList = data.calendarList
         this.initCharts()
       })
     },
@@ -90,12 +94,16 @@ export default {
       const robustPortfolio = this.$refs.robustLine
       const aggressivePortfolio = this.$refs.aggressiveLine
 
+      const myCalendar = this.$refs.monthCalendar
+
       const myPieCharts = this.$echarts.init(pieChart, 'walden')
       const myLineCharts = this.$echarts.init(lineChart, 'walden')
       const myIndexFundCharts = this.$echarts.init(indexFund, 'walden')
       const myActiveFundCharts = this.$echarts.init(activeFund, 'walden');
       const myRobustPortfolioCharts = this.$echarts.init(robustPortfolio, 'walden')
       const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden');
+
+      const calendarCharts = this.$echarts.init(myCalendar, 'walden')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -286,12 +294,42 @@ export default {
           },
         series: this.aggressiveLine
       };
+
+      const calendarOption = {
+        tooltip: {},
+        calendar: [
+          {
+            left: 'center',
+            top: 'middle',
+            cellSize: 40,
+            yearLabel: { show: false },
+            orient: 'vertical',
+            dayLabel: {
+              firstDay: 1,
+              nameMap: 'cn'
+            },
+            monthLabel: {
+              show: false
+            },
+            range: '2021-03'
+          }
+        ],
+        series:[
+            {
+              type: 'custom',
+              coordinateSystem: 'calendar',
+              data: this.calendarList
+            }
+          ]
+      }
       myPieCharts.setOption(pieOption)
       myLineCharts.setOption(lineOption)
       myIndexFundCharts.setOption(indexLineOption)
       myActiveFundCharts.setOption(activeLineOption)
       myRobustPortfolioCharts.setOption(robustLineOption)
       myAggressivePortfolioCharts.setOption(aggressiveLineOption)
+
+      calendarCharts.setOption(calendarOption)
     }
   },
 }
