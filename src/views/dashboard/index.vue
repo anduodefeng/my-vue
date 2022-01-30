@@ -165,7 +165,7 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'cross'
+            type: 'line'
           }
         },
         legend: {
@@ -184,7 +184,6 @@ export default {
         },
         yAxis: {
             type: 'value',
-
           },
         series: this.indexFundLine
       };

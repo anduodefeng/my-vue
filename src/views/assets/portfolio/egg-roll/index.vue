@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;" @click="addPortfolioDrawerVisible=true">更新组合</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addPortfolioDrawerVisible=true">更新组合</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="portfolioPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="portfolioLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>

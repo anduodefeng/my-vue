@@ -37,6 +37,13 @@ export function saveDetail(data){
   })
 }
 
+export function getDetailChart(data){
+  return request({
+    url: '/creditCard/detailChart/'+data,
+    method: 'GET'
+  })
+}
+
 export function getDetail(data){
   return request({
     url: '/creditCard/detailPage',

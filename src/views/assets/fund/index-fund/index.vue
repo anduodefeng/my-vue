@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;" @click="addFundDrawerVisible=true">更新基金</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addFundDrawerVisible=true">更新基金</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="totalLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
@@ -131,7 +131,7 @@ export default {
         shares: '',
         changeMoney: '',
         principal: '',
-        type: '',
+        type: '1',
         fundType: '0',
         remark: '',
         createTime: ''

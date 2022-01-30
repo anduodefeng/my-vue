@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="PABBar" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>
@@ -88,7 +88,10 @@
           <el-input type="number" v-model.number="addBankForm.repayDay" style="width:180px"/>
         </el-form-item>
         <el-form-item label="变动金额" prop="changeMoney">
-          <el-input type="number" v-model.number="addBankForm.changeMoney" style="width:180px"/>
+          <el-input-number :precision="2" :step="0.01" v-model="addBankForm.changeMoney" style="width:180px"/>
+        </el-form-item>
+        <el-form-item label="变动时间">
+          <el-date-picker v-model="addBankForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="原因" prop="reason">
           <el-input v-model="addBankForm.reason" style="width:180px"/>
@@ -122,15 +125,15 @@ export default {
         reason: '',
         limit: '',
         billDay: '',
-        repayDay: ''
+        repayDay: '',
+        createTime: ''
       },
       addBankRules: {
         bankName: [
           {required: true, message: "请输入银行名称", trigger: "blur"}
         ],
         changeMoney: [
-          {required: true, message: "请输入变动金额", trigger: "blur"},
-          {type: 'number', message: "变动金额必须为数字", trigger: "blur"}
+          {required: true, message: "请输入变动金额", trigger: "blur"}
         ],
         reason: [
           {required: true, message: "请输入原因", trigger: "blur"}
@@ -139,8 +142,8 @@ export default {
       bankWidth: '90px',
       bankNames: [],
       monthBar:[],
-      cmbBar: [],
-      pabBar: []
+      cmbList: [],
+      pabList: []
     }
   },
   created() {
@@ -165,6 +168,9 @@ export default {
     getCreditInfo(bankName){
       getBankInfo(bankName).then(response => {
         const {data} = response
+        this.addBankForm.limit = data.limit
+        this.addBankForm.billDay = data.billDay
+        this.addBankForm.repayDay = data.repayDay
       })
     },
     handleSizeChange(val){
@@ -187,7 +193,8 @@ export default {
             "reason": this.addBankForm.reason,
             "limit": this.addBankForm.limit,
             "billDay": this.addBankForm.billDay,
-            "repayDay": this.addBankForm.repayDay
+            "repayDay": this.addBankForm.repayDay,
+            "createTime": this.addBankForm.createTime
           }).then(response => {
             this.$message({
               message: '保存成功',
@@ -217,8 +224,8 @@ export default {
     getChartData(){
       getChart().then(response => {
         this.monthBar = response.data.monthList
-        this.cmbBar = response.data.CMBList
-        this.pabBar = response.data.PABList
+        this.cmbList = response.data.cmbList
+        this.pabList = response.data.pabList
 
         this.initCharts()
       })
@@ -227,8 +234,8 @@ export default {
       const pabBar = this.$refs.PABBar
       const cmbBar = this.$refs.CMBBar
 
-      const pabCharts = this.$echarts.init(pabBar)
-      const cmbCharts = this.$echarts.init(cmbBar)
+      const pabCharts = this.$echarts.init(pabBar,'walden')
+      const cmbCharts = this.$echarts.init(cmbBar,'walden')
       
       const cmbOption = {
         //动画时长 2000ms
@@ -239,7 +246,7 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'none'
+            type: 'cross'
           }
         },
         xAxis: {
@@ -251,15 +258,8 @@ export default {
         },
         series: [
           {
-            data: this.cmbBar,
-            type: 'bar',
-            itemStyle: {
-              normal: {
-                color: function(param){
-                  return param.data['color']
-                }
-              }
-            }
+            data: this.cmbList,
+            type: 'bar'
           }
         ]
       };
@@ -272,7 +272,7 @@ export default {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'none'
+            type: 'cross'
           }
         },
         xAxis: {
@@ -284,15 +284,8 @@ export default {
         },
         series: [
           {
-            data: this.pabBar,
-            type: 'bar',
-            itemStyle: {
-              normal: {
-                color: function(param){
-                  return param.data['color']
-                }
-              }
-            }
+            data: this.pabList,
+            type: 'bar'
           }
         ]
       }
