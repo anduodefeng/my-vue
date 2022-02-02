@@ -192,10 +192,7 @@ export default {
               name: "收益率",
               type: 'line',
               data: this.rateList,
-              animationDuration: 2000,
-              lineStyle: {
-                color: '#46cdcf'
-              }
+              animationDuration: 2000
             }
           ]
         }

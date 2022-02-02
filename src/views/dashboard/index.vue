@@ -358,12 +358,10 @@ export default {
   float:left;
 }
 .topDiv{
-  border:1px dotted red; 
   width:600px; 
   height:400px;
 }
-.chartDiv{
-  border:1px dotted red; 
+.chartDiv{ 
   width:1400px; 
   height:400px;
   margin-top: 30px;
