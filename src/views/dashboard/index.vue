@@ -18,9 +18,12 @@
         <span v-if="yesterdayProfit == 0 " class="infoNum">{{ yesterdayProfit }}</span>
       </div>
     </div>
-    <div ref = "totalPie" class="chartDiv"></div>
-    <div ref = "monthCalendar" class="chartDiv"></div>
-    <div ref = "totalLine" class="chartDiv"></div>
+    <div class="chartDiv">
+      <div ref = "totalPie" class = "topDiv" style="float:left;"></div>
+      <div ref = "totalLine" style="width: 790px; height:400px;float:left;"></div>
+    </div>
+    <div ref="profitEveryday" class="chartDiv"></div>
+    
     <div ref = "indexFundLine" class="chartDiv"></div>
     <div ref = "activeFundLine" class="chartDiv"></div>
     <div ref = "robustLine" class="chartDiv"></div>
@@ -56,8 +59,7 @@ export default {
       robustLine: [],
       aggressiveName: [],
       aggressiveLine: [],
-
-      calendarList: []
+      profitEveryday: []
     }
   },
   mounted(){
@@ -82,7 +84,7 @@ export default {
         this.robustLine = data.robustPortfolioLine
         this.aggressiveName = data.aggressivePortfolioNameList
         this.aggressiveLine = data.aggressivePortfolioLine
-        this.calendarList = data.calendarList
+        this.profitEveryday = data.profitEveryday
         this.initCharts()
       })
     },
@@ -93,17 +95,16 @@ export default {
       const activeFund = this.$refs.activeFundLine
       const robustPortfolio = this.$refs.robustLine
       const aggressivePortfolio = this.$refs.aggressiveLine
-
-      const myCalendar = this.$refs.monthCalendar
+      const profitEveryday = this.$refs.profitEveryday
 
       const myPieCharts = this.$echarts.init(pieChart, 'walden')
       const myLineCharts = this.$echarts.init(lineChart, 'walden')
       const myIndexFundCharts = this.$echarts.init(indexFund, 'walden')
-      const myActiveFundCharts = this.$echarts.init(activeFund, 'walden');
+      const myActiveFundCharts = this.$echarts.init(activeFund, 'walden')
       const myRobustPortfolioCharts = this.$echarts.init(robustPortfolio, 'walden')
-      const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden');
+      const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden')
+      const profitEverydayCharts = this.$echarts.init(profitEveryday, 'walden')
 
-      const calendarCharts = this.$echarts.init(myCalendar, 'walden')
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -294,42 +295,47 @@ export default {
           },
         series: this.aggressiveLine
       };
-
-      const calendarOption = {
-        tooltip: {},
-        calendar: [
-          {
-            left: 'center',
-            top: 'middle',
-            cellSize: 40,
-            yearLabel: { show: false },
-            orient: 'vertical',
-            dayLabel: {
-              firstDay: 1,
-              nameMap: 'cn'
-            },
-            monthLabel: {
-              show: false
-            },
-            range: '2021-03'
-          }
-        ],
-        series:[
+      const profitEverydayOption =  {
+          title: {
+            text: '总资产日常变动'
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          xAxis: {
+            type: 'category',
+            data: this.dateList
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
             {
-              type: 'custom',
-              coordinateSystem: 'calendar',
-              data: this.calendarList
+              name: "收益",
+              type: 'candlestick',
+              data: this.profitEveryday,
+              barWidth: 20,
+              animationDuration: 2000,
+              itemStyle: {
+                color: "#eb5454",
+                color0: "#47b262",
+                borderColor: "#eb5454",
+                borderColor0: "#47b262",
+                borderWidth: 1
+              }
             }
           ]
-      }
+        };
       myPieCharts.setOption(pieOption)
       myLineCharts.setOption(lineOption)
       myIndexFundCharts.setOption(indexLineOption)
       myActiveFundCharts.setOption(activeLineOption)
       myRobustPortfolioCharts.setOption(robustLineOption)
       myAggressivePortfolioCharts.setOption(aggressiveLineOption)
-
-      calendarCharts.setOption(calendarOption)
+      profitEverydayCharts.setOption(profitEverydayOption)
     }
   },
 }
@@ -351,8 +357,13 @@ export default {
   margin-left:50px;
   float:left;
 }
+.topDiv{
+  border:1px dotted red; 
+  width:600px; 
+  height:400px;
+}
 .chartDiv{
-  border:0px dotted black; 
+  border:1px dotted red; 
   width:1400px; 
   height:400px;
   margin-top: 30px;
