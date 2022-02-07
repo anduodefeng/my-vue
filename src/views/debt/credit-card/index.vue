@@ -30,9 +30,9 @@
           <span>{{ scope.row.limit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="剩余额度">
+      <el-table-column align="center" label="本月消费">
         <template slot-scope="scope">
-          <span>{{ scope.row.leftAmount }}</span>
+          <span>{{ scope.row.customAmount }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="账单日">
