@@ -11,12 +11,6 @@
         <span v-if="totalProfit < 0 " style="color:green;" class="infoNum" >{{ totalProfit }}</span>
         <span v-if="totalProfit == 0 " class="infoNum">{{ totalProfit }}</span>
       </div>
-      <div class="assetsDiv">
-        <span class="info">昨日收益(元)：</span>
-        <span v-if="yesterdayProfit > 0 " style="color:red;" class="infoNum" >{{ yesterdayProfit }}</span>
-        <span v-if="yesterdayProfit < 0 " style="color:green;" class="infoNum" >{{ yesterdayProfit }}</span>
-        <span v-if="yesterdayProfit == 0 " class="infoNum">{{ yesterdayProfit }}</span>
-      </div>
     </div>
     <div class="chartDiv">
       <div ref = "totalPie" class = "topDiv" style="float:left;"></div>
@@ -179,7 +173,7 @@ export default {
         },
         legend: {
           data: this.indexFundName,
-          left: 200
+          left: 150
         },
         grid: {
             left: '3%',
@@ -354,7 +348,8 @@ export default {
 .assetsDiv{
   width:400px;
   height:50px;
-  margin-left:50px;
+  margin-left:200px;
+  margin-bottom: 20px;
   float:left;
 }
 .topDiv{
