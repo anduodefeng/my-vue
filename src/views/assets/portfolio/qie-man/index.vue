@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;float:right;" @click="addPortfolioDrawerVisible=true">更新组合</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addPortfolio()">添加组合</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="portfolioPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="portfolioLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
@@ -53,9 +53,14 @@
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.id)">查看变动</el-button>
+          <el-button type="primary" plain @click="getDetail(scope.row.id)">详情</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="记录">
+        <template slot-scope="scope">
+          <el-button type="primary" plain @click="recordPortfolio(scope.row.id, scope.row.name)">变动</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,24 +76,19 @@
                size="400px" title="更新组合(先更新当日收益情况，再更新转入转出操作哦！)">
       <el-form style="margin-left:20px" :model="addPortfolioForm" ref="addPortfolioForm" :rules="addPortfolioRules" label-width="100px" size="mini" @submit.native.prevent>
         <el-form-item label="组合名称" prop="name">
-          <el-select v-model="addPortfolioForm.name" filterable allow-create @change="getPortfolioInfo" placeholder="请选择">
-            <el-option
-              v-for="portfolio in portfolioInfos"
-              :key="portfolio.id"
-              :label="portfolio.name"
-              :value="portfolio.id">
-            </el-option>
-          </el-select>
+          <el-input v-model="addPortfolioForm.name" style="width:180px"/>
         </el-form-item>
         <el-form-item>
           <el-input v-show="false" v-model="addPortfolioForm.portfolioId"></el-input>
         </el-form-item>
-        <el-form-item label="变动金额" prop="changeMoney">
-          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.changeMoney" style="width:180px"/>
+        <el-form-item label="总金额" prop="newMoney">
+          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.newMoney" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="变动类型" prop="type">
-          <el-radio v-model="addPortfolioForm.changeType" label="0">转入或转出</el-radio>
-          <el-radio v-model="addPortfolioForm.changeType" label="1">记录更新</el-radio>
+        <el-form-item label="盈利金额" prop="profit">
+          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profit" style="width:180px"/>
+        </el-form-item>
+        <el-form-item label="收益率" prop="profitRate">
+          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profitRate" style="width:180px"/>
         </el-form-item>
         <el-form-item label="组合类型" prop="type">
           <el-radio v-model="addPortfolioForm.type" label="0">稳健</el-radio>
@@ -97,9 +97,6 @@
         </el-form-item>
         <el-form-item label="变动时间">
           <el-date-picker v-model="addPortfolioForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addPortfolioForm.remark" style="width:180px"/>
         </el-form-item>
         <el-form-item style="text-align:left">
           <el-button type="primary" @click="submitForm('addPortfolioForm')">添加</el-button>
@@ -112,7 +109,7 @@
 </template>
 
 <script>
-import { getChart, getPortfolioList, getPortfolioInfos, getPortfolioInfo, savePortfolioChange } from '@/api/portfolio'
+import { getChart, getPortfolioList, savePortfolioChange } from '@/api/portfolio'
 
 export default {
   data() {
@@ -129,9 +126,9 @@ export default {
       addPortfolioForm: {
         portfolioId: '',
         name: '',
-        changeMoney: '',
-        remark: '',
-        changeType: '1',
+        newMoney: '',
+        profit: '',
+        profitRate: '',
         type: '0',
         createTime: ''
       },
@@ -140,8 +137,6 @@ export default {
           {required: true, message: "请输入组合名称", trigger: "blur"}
         ]
       },
-      bankWidth: '90px',
-      portfolioInfos: [],
       pieData: [],
       dateList: [],
       totalAmount: [],
@@ -163,9 +158,6 @@ export default {
         this.totalCount = response.data.totalNum
         this.listLoading = false
       })
-      getPortfolioInfos({"accountId": this.accountId}).then(response => {
-        this.portfolioInfos = response.data.portfolioInfoDTOS
-      })
     },
     handleSizeChange(val){
       //改变每页显示的条数
@@ -183,9 +175,9 @@ export default {
           savePortfolioChange({
             "portfolioId": this.addPortfolioForm.portfolioId,
             "name": this.addPortfolioForm.name,
-            "changeMoney": this.addPortfolioForm.changeMoney,
-            "remark": this.addPortfolioForm.remark,
-            "changeType": this.addPortfolioForm.changeType,
+            "newMoney": this.addPortfolioForm.newMoney,
+            "profit": this.addPortfolioForm.profit,
+            "profitRate": this.addPortfolioForm.profitRate,
             "accountId": this.accountId,
             "accountName": this.accountName,
             "type": this.addPortfolioForm.type,
@@ -208,13 +200,14 @@ export default {
         this.$refs[formName].resetFields();
       }
     },
-    getPortfolioInfo(value){
-      getPortfolioInfo({"id": value}).then(response => {
-        const { data } = response
-        this.addPortfolioForm.portfolioId = data.id
-        this.addPortfolioForm.name = data.name
-        this.addPortfolioForm.type = data.type
-      })
+    addPortfolio(){
+      this.addPortfolioForm.portfolioId = ''
+      this.addPortfolioForm.name = ''
+      this.addPortfolioForm.newMoney = 0
+      this.addPortfolioForm.profit = 0
+      this.addPortfolioForm.profitRate = 0
+
+      this.addPortfolioDrawerVisible = true
     },
     getDetail(id){
       this.$router.push({
@@ -222,6 +215,15 @@ export default {
         name: 'qie-man-detail',
         params: {id: id}
       })
+    },
+    recordPortfolio(id, name){
+      this.addPortfolioForm.portfolioId = id;
+      this.addPortfolioForm.name = name
+      this.addPortfolioForm.newMoney = 0
+      this.addPortfolioForm.profit = 0
+      this.addPortfolioForm.profitRate = 0
+
+      this.addPortfolioDrawerVisible = true
     },
     getChartData(){
       getChart(1).then(response => {
@@ -290,13 +292,13 @@ export default {
           {
             name: '总资产',
             data: this.totalAmount,
-            type: 'line',
+            type: 'line'
           },
           {
             name: '总成本',
             data: this.totalPrincipal,
-            type: 'line',
-          },
+            type: 'line'
+          }
         ]
       };
       myPieCharts.setOption(pieOption)

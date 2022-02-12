@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div style=";width:1400px;height:300px;">
+    <div style="width:1400px;height:300px;">
       <div ref="detailBar" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="detailLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
     </div>
@@ -24,16 +24,18 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动金额">
+      <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 0" style="color:red;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 1" style="color:green;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 2" >{{ scope.row.changeMoney }}</span>
+          <span v-if="scope.row.newMoney > 0" style="color:red;font-weight:bolder">{{ scope.row.newMoney }}</span>
+          <span v-if="scope.row.newMoney < 0" style="color:green;font-weight:bolder">{{ scope.row.newMoney }}</span>
+          <span v-if="scope.row.newMoney == 0" >{{ scope.row.newMoney }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动类型">
-        <template slot-scope="scope">
-          <span>{{ scope.row.changeType }}</span>
+      <el-table-column align="center" label="盈利金额">
+          <template slot-scope="scope">
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder;">{{ scope.row.profit }}%</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder;">{{ scope.row.profit }}%</span>
+          <span v-if="scope.row.profit == 0">{{ scope.row.profit }}%</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="收益率">
@@ -79,7 +81,7 @@ export default {
     this.fetchData()
   },
   mounted(){
-    this.getDetailChart();
+    this.getDetailChart()
   },
   methods: {
     fetchData() {

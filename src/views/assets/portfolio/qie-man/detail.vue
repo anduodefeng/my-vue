@@ -24,22 +24,24 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动金额">
+      <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.changeMoney }}</span>
+          <span v-if="scope.row.newMoney > 0" style="color:red;font-weight:bolder">{{ scope.row.newMoney }}</span>
+          <span v-if="scope.row.newMoney < 0" style="color:green;font-weight:bolder">{{ scope.row.newMoney }}</span>
+          <span v-if="scope.row.newMoney == 0" >{{ scope.row.newMoney }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动类型">
-        <template slot-scope="scope">
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 0" style="color:red;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 1" style="color:green;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 2" >{{ scope.row.changeMoney }}</span>
+      <el-table-column align="center" label="盈利金额">
+          <template slot-scope="scope">
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder;">{{ scope.row.profit }}%</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder;">{{ scope.row.profit }}%</span>
+          <span v-if="scope.row.profit == 0">{{ scope.row.profit }}%</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="收益率">
         <template slot-scope="scope">
-          <span v-if="scope.row.profitRate > 0" style="color:red;font-weight:bolder">{{ scope.row.profitRate }}%</span>
-          <span v-if="scope.row.profitRate < 0" style="color:green;font-weight:bolder">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate > 0" style="color:red;font-weight:bolder;">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate < 0" style="color:green;font-weight:bolder;">{{ scope.row.profitRate }}%</span>
           <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
         </template>
       </el-table-column>
@@ -97,11 +99,6 @@ export default {
         })
       
     },
-    handleCurrentChange(val){
-      //改变默认的页数
-      this.currentPage = val
-      this.fetchData();
-    },
     checkChangeMoney(changeMoney, changeType){
       if(changeMoney > 0 && changeType == '日常更新'){
         return 0
@@ -110,6 +107,11 @@ export default {
       }else{
         return 2
       }
+    },
+    handleCurrentChange(val){
+      //改变默认的页数
+      this.currentPage = val
+      this.fetchData();
     },
     getDetailChart(){
       getDetailChart(this.id).then(response => {
@@ -182,7 +184,7 @@ export default {
               name: "收益率",
               type: 'line',
               data: this.rateList,
-              animationDuration: 2000,
+              animationDuration: 2000
             }
           ]
         }

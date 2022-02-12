@@ -156,33 +156,33 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/debt',
-    component: Layout,
-    redirect: '/debt/creditIndex/',
-    meta: { title: '负债', icon: 'debt' },
-    children: [
-      {
-        path: 'creditIndex',
-        component: () => import('@/views/debt/credit-card/index'),
-        name: 'creditIndex',
-        meta: { title: '信用卡', icon: 'credit'},
-      },
-      {
-        path: 'creditDetail',
-        hidden: true,
-        component: () => import('@/views/debt/credit-card/detail'),
-        name: 'creditDetail',
-        meta: { title: '信用卡', icon: 'credit'},
-      },
-      {
-        path: 'otherDebt',
-        component: () => import('@/views/debt/other-debt/index'), 
-        name: 'otherDebt',
-        meta: { title: '其他', icon: 'other' },
-      }
-    ]
-  }
+  // {
+  //   path: '/debt',
+  //   component: Layout,
+  //   redirect: '/debt/creditIndex/',
+  //   meta: { title: '负债', icon: 'debt' },
+  //   children: [
+  //     {
+  //       path: 'creditIndex',
+  //       component: () => import('@/views/debt/credit-card/index'),
+  //       name: 'creditIndex',
+  //       meta: { title: '信用卡', icon: 'credit'},
+  //     },
+  //     {
+  //       path: 'creditDetail',
+  //       hidden: true,
+  //       component: () => import('@/views/debt/credit-card/detail'),
+  //       name: 'creditDetail',
+  //       meta: { title: '信用卡', icon: 'credit'},
+  //     },
+  //     {
+  //       path: 'otherDebt',
+  //       component: () => import('@/views/debt/other-debt/index'), 
+  //       name: 'otherDebt',
+  //       meta: { title: '其他', icon: 'other' },
+  //     }
+  //   ]
+  // }
 ]
 
 /**
