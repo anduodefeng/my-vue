@@ -18,12 +18,17 @@
           {{ scope.row.bankName }}
         </template>
       </el-table-column>
-      <el-table-column label="变动金额" align="center">
+      <el-table-column label="总金额" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="update_at" label="变动时间">
+      <el-table-column label="备注" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.reason }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="update_at" label="记录时间">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;float:right;" @click="addBankDrawerVisible=true">添加银行卡/变动</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addBank()">添加银行卡/变动</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="cashPie" style="width:600px;height:300px; margin-bottom:10px;float:left">
       </div>
@@ -35,9 +35,10 @@
           <span>{{ scope.row.latestTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.bankName)">查看变动详情</el-button>
+          <el-button type="primary" plain @click="getDetail(scope.row.bankName)">详情</el-button>
+          <el-button type="primary" plain @click="recordCash(scope.row.bankName)">变动</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -53,19 +54,12 @@
                size="400px" title="添加银行卡">
       <el-form style="margin-left:90px" :model="addBankForm" ref="addBankForm" :rules="addBankRules" label-width="80px" size="mini" @submit.native.prevent>
         <el-form-item label="银行名称" prop="bankName">
-          <el-select v-model="addBankForm.bankName" filterable allow-create placeholder="请选择">
-            <el-option
-              v-for="item in bankNames"
-              :key="item"
-              :label="item"
-              :value="item">
-            </el-option>
-          </el-select>
+          <el-input v-model="addBankForm.bankName" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="变动金额" prop="changeMoney">
+        <el-form-item label="总金额" prop="changeMoney">
           <el-input type="number" v-model.number="addBankForm.changeMoney" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="原因" prop="reason">
+        <el-form-item label="原因">
           <el-input v-model="addBankForm.reason" style="width:180px"/>
         </el-form-item>
         <el-form-item style="text-align:left">
@@ -103,9 +97,6 @@ export default {
         changeMoney: [
           {required: true, message: "请输入变动金额", trigger: "blur"},
           {type: 'number', message: "变动金额必须为数字", trigger: "blur"}
-        ],
-        reason: [
-          {required: true, message: "请输入原因", trigger: "blur"}
         ]
       },
       bankWidth: '90px',
@@ -177,12 +168,22 @@ export default {
         this.$refs[formName].resetFields();
       }
     },
+    addBank(){
+      // this.addBankForm.bankName = ''
+
+      this.addBankDrawerVisible = true
+    },
     getDetail(bankName){
       this.$router.push({
         path: "/assets",
         name: 'cashDetail',
         params: {bankName: bankName}
       })
+    },
+    recordCash(bankName){
+      this.addBankForm.bankName = bankName
+
+      this.addBankDrawerVisible = true
     },
     getChartData(){
       getChart().then(response => {
