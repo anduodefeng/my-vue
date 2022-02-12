@@ -138,7 +138,6 @@ export default {
           {required: true, message: "请输入基金代码", trigger: "blur"},
         ]
       },
-      bankWidth: '90px',
       pieData: [],
       fundNameList: [],
       dateList:[],

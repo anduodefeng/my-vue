@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;float:right;" @click="addFundDrawerVisible=true">更新基金</el-button>
+    <el-button type="primary" style="margin:10px;float:right;" @click="addFund()">添加基金</el-button>
     <div style="width:1400px;height:300px;">
       <div ref="fundPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
       <div ref="totalLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
@@ -58,9 +58,14 @@
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.code)">查看变动</el-button>
+          <el-button type="primary" plain @click="getDetail(scope.row.code)">详情</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="记录">
+        <template slot-scope="scope">
+          <el-button type="primary" plain @click="recordFund(scope.row.code, scope.row.name)">更新</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -73,33 +78,25 @@
     :total="totalCount"/>
 
     <el-drawer :visible.sync="addFundDrawerVisible" @close="$refs['addFundForm'].resetFields()" :direction="direction" 
-               size="400px" title="更新基金(先更新当日收益情况，再更新转入转出操作哦！)">
+               size="400px" title="添加基金">
       <el-form style="margin-left:90px" :model="addFundForm" ref="addFundForm" :rules="addFundRules" label-width="80px" size="mini" @submit.native.prevent>
         <el-form-item label="基金名称" prop="name">
-          <el-select v-model="addFundForm.name" filterable allow-create @change="getFundInfo" placeholder="请选择">
-            <el-option
-              v-for="item in fundInfos"
-              :key="item.code"
-              :label="item.name"
-              :value="item.code">
-            </el-option>
-          </el-select>
+          <el-input v-model="addFundForm.name" style="width:180px"/>
         </el-form-item>
         <el-form-item label="基金代码" prop="code">
           <el-input v-model="addFundForm.code" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="变动金额" prop="changeMoney">
-          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.changeMoney" style="width:180px"/>
+        <el-form-item label="最新金额" prop="newMoney">
+          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.newMoney" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="变动类型" prop="type">
-          <el-radio v-model="addFundForm.type" label="0">转入或转出</el-radio>
-          <el-radio v-model="addFundForm.type" label="1">记录更新</el-radio>
+        <el-form-item label="盈利金额" prop="profit">
+          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.profit" style="width:180px"/>
         </el-form-item>
-        <el-form-item label="变动时间">
+        <el-form-item label="收益率" prop="profitRate">
+          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.profitRate" style="width:180px"/>
+        </el-form-item>        
+        <el-form-item label="记录时间">
           <el-date-picker v-model="addFundForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="addFundForm.remark" style="width:180px"/>
         </el-form-item>
         <el-form-item style="text-align:left">
           <el-button type="primary" @click="submitForm('addFundForm')">添加</el-button>
@@ -112,7 +109,7 @@
 </template>
 
 <script>
-import { getChart, getFundList, getFundInfos, getFundInfo, saveFundDetail } from '@/api/fund'
+import { getChart, getFundList, saveFundDetail } from '@/api/fund'
 
 export default {
   data() {
@@ -127,13 +124,10 @@ export default {
       addFundForm: {
         code: '',
         name: '',
-        worth: '',
-        shares: '',
-        changeMoney: '',
-        principal: '',
-        type: '1',
+        newMoney: '',
+        profit: '',
+        profitRate: '',
         fundType: '1',
-        remark: '',
         createTime: ''
       },
       addFundRules: {
@@ -142,15 +136,11 @@ export default {
         ],
         code: [
           {required: true, message: "请输入基金代码", trigger: "blur"},
-        ],
-        type: [
-          {required: true, message: "请选择变动类型", trigger: "blur"},
         ]
       },
-      fundInfos: [],
       pieData: [],
       fundNameList: [],
-      dateList: [],
+      dateList:[],
       totalAmount: [],
       totalPrincipal: []
     }
@@ -170,9 +160,6 @@ export default {
         this.totalCount = response.data.totalNum
         this.listLoading = false
       })
-      getFundInfos({"fundType": "1"}).then(response => {
-        this.fundInfos = response.data.fundInfos
-      })
     },
     handleSizeChange(val){
       //改变每页显示的条数
@@ -190,24 +177,18 @@ export default {
           saveFundDetail({
             "code": this.addFundForm.code,
             "name": this.addFundForm.name,
-            "changeMoney": this.addFundForm.changeMoney,
-            "type": this.addFundForm.type,
+            "newMoney": this.addFundForm.newMoney,
+            "profit": this.addFundForm.profit,
+            "profitRate": this.addFundForm.profitRate,
             "fundType": this.addFundForm.fundType,
-            "remark": this.addFundForm.remark,
             "createTime": this.addFundForm.createTime
           }).then(response => {
-            const {code} = response
-            const {message} = response
-            if(code == 1000){
               this.$message({
                 message: '保存成功',
                 type: 'success'
               })
               this.addFundDrawerVisible = false
               this.fetchData()
-            }else{
-              this.$message.error(message)
-            }
           })
         }else{
           this.$message.error("请填写全部内容后，在提交!!!")
@@ -220,13 +201,14 @@ export default {
         this.$refs[formName].resetFields();
       }
     },
-    getFundInfo(value){
-      getFundInfo({"code": value}).then(response => {
-        const { data } = response
-        this.addFundForm.code = data.code
-        this.addFundForm.name = data.name
-        this.addFundForm.principal = data.principal
-      })
+    addFund(){
+      this.addFundForm.code = ''
+      this.addFundForm.name = ''
+      this.addFundForm.profit = 0
+      this.addFundForm.profitRate = 0
+      this.addFundForm.newMoney = 0
+
+      this.addFundDrawerVisible=true
     },
     getDetail(code){
       this.$router.push({
@@ -234,6 +216,15 @@ export default {
         name: 'indexFundDetail',
         params: {code: code}
       })
+    },
+    recordFund(code, name){
+      this.addFundForm.code = code
+      this.addFundForm.name = name
+      this.addFundForm.profit = 0
+      this.addFundForm.profitRate = 0
+      this.addFundForm.newMoney = 0
+
+      this.addFundDrawerVisible = true
     },
     getChartData(){
       getChart(1).then(response => {
@@ -275,7 +266,7 @@ export default {
             data: this.pieData
           }
         ]
-      };
+      }
       const totalLineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -302,7 +293,8 @@ export default {
           data: this.dateList
         },
         yAxis: {
-            type: 'value',           
+            type: 'value',  
+                     
         },
         series: [
           {

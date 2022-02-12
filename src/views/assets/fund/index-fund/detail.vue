@@ -178,7 +178,7 @@ export default {
               name: "收益率",
               type: 'line',
               data: this.rateList,
-              animationDuration: 2000,
+              animationDuration: 2000
             }
           ]
         }
