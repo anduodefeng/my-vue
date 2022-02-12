@@ -29,21 +29,16 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="变动金额">
-        <template slot-scope="scope">
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 0" style="color:red;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 1" style="color:green;font-weight:bolder">{{ scope.row.changeMoney }}</span>
-          <span v-if="checkChangeMoney(scope.row.changeMoney, scope.row.type) == 2" >{{ scope.row.changeMoney }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="变动类型">
-        <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span>{{ scope.row.money }}</span>
+          <span>{{ scope.row.newAssets }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="总盈利">
+        <template slot-scope="scope">
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit == 0" >{{ scope.row.profit }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="收益率">
@@ -111,15 +106,6 @@ export default {
       //改变默认的页数
       this.currentPage = val
       this.fetchData();
-    },
-    checkChangeMoney(changeMoney, changeType){
-      if(changeMoney > 0 && changeType == '日常更新'){
-        return 0
-      }else if(changeMoney < 0 && changeType == '日常更新'){
-        return 1
-      }else{
-        return 2
-      }
     },
     getDetailChart(){
       getDetailChart(this.code).then(response => {
