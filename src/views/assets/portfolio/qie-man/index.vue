@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column align="center" label="记录">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="recordPortfolio(scope.row.id, scope.row.name)">变动</el-button>
+          <el-button type="primary" plain @click="recordPortfolio(scope.row.id, scope.row.name, scope.row.type)">变动</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -216,9 +216,10 @@ export default {
         params: {id: id}
       })
     },
-    recordPortfolio(id, name){
+    recordPortfolio(id, name, type){
       this.addPortfolioForm.portfolioId = id;
       this.addPortfolioForm.name = name
+      this.addPortfolioForm.type = type
       this.addPortfolioForm.newMoney = 0
       this.addPortfolioForm.profit = 0
       this.addPortfolioForm.profitRate = 0

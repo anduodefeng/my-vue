@@ -26,15 +26,13 @@
       </el-table-column>
       <el-table-column align="center" label="总金额">
         <template slot-scope="scope">
-          <span v-if="scope.row.newMoney > 0" style="color:red;font-weight:bolder">{{ scope.row.newMoney }}</span>
-          <span v-if="scope.row.newMoney < 0" style="color:green;font-weight:bolder">{{ scope.row.newMoney }}</span>
-          <span v-if="scope.row.newMoney == 0" >{{ scope.row.newMoney }}</span>
+          <span>{{ scope.row.newMoney }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="盈利金额">
           <template slot-scope="scope">
-          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder;">{{ scope.row.profit }}%</span>
-          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder;">{{ scope.row.profit }}%</span>
+          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder;">{{ scope.row.profit }}</span>
+          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder;">{{ scope.row.profit }}</span>
           <span v-if="scope.row.profit == 0">{{ scope.row.profit }}%</span>
         </template>
       </el-table-column>
