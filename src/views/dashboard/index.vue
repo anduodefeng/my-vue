@@ -11,6 +11,12 @@
         <span v-if="totalProfit < 0 " style="color:green;" class="infoNum" >{{ totalProfit }}</span>
         <span v-if="totalProfit == 0 " class="infoNum">{{ totalProfit }}</span>
       </div>
+      <div class="assetsDiv">
+        <span class="info">总收益率：</span>
+        <span v-if="totalProfitRate > 0 " style="color:red;" class="infoNum" >{{ totalProfitRate }}%</span>
+        <span v-if="totalProfitRate < 0 " style="color:green;" class="infoNum" >{{ totalProfitRate }}%</span>
+        <span v-if="totalProfitRate == 0 " class="infoNum">{{ totalProfitRate }}</span>
+      </div>
     </div>
     <div class="chartDiv">
       <div ref = "totalPie" class = "topDiv" style="float:left;"></div>
@@ -40,7 +46,7 @@ export default {
     return {
       totalAssets: 0,
       totalProfit: 0,
-      yesterdayProfit: 0,
+      totalProfitRate: 0,
       pieData:[],
       dateList:[],
       moneyList:[],
@@ -65,7 +71,7 @@ export default {
         const {data} = response 
         this.totalAssets = data.totalAssets
         this.totalProfit = data.totalProfit
-        this.yesterdayProfit = data.yesterdayProfit
+        this.totalProfitRate = data.totalProfitRate
         this.pieData = data.pieList
         this.dateList = data.dateList
         this.moneyList = data.moneyList
@@ -348,7 +354,7 @@ export default {
 .assetsDiv{
   width:400px;
   height:50px;
-  margin-left:200px;
+  margin-left:50px;
   margin-bottom: 20px;
   float:left;
 }
