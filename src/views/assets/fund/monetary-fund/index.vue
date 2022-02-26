@@ -93,7 +93,7 @@
           <el-input-number :precision="2" :step="0.01" v-model="addFundForm.profit" style="width:180px"/>
         </el-form-item>
         <el-form-item label="收益率" prop="profitRate">
-          <el-input-number :precision="2" :step="0.01" v-model="addFundForm.profitRate" style="width:180px"/>
+          <el-input v-model="addFundForm.profitRate" style="width:180px"/>
         </el-form-item>
         <el-form-item label="记录时间">
           <el-date-picker v-model="addFundForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
