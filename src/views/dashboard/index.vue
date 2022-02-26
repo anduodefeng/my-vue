@@ -22,7 +22,10 @@
       <div ref = "totalPie" class = "topDiv" style="float:left;"></div>
       <div ref = "totalLine" style="width: 790px; height:400px;float:left;"></div>
     </div>
-    <div ref="profitEveryday" class="chartDiv"></div>
+    <div class="chartDiv">
+      <div ref = "profitEveryWeek" style="width:650px; height:400px;float:left;"></div>
+      <div ref = "profitRateEveryWeek" style="width: 650px; height:400px;float:left;"></div>
+    </div>
     
     <div ref = "indexFundLine" class="chartDiv"></div>
     <div ref = "activeFundLine" class="chartDiv"></div>
@@ -59,7 +62,8 @@ export default {
       robustLine: [],
       aggressiveName: [],
       aggressiveLine: [],
-      profitEveryday: []
+      profitEveryWeek: [],
+      profitRateEveryWeek: []
     }
   },
   mounted(){
@@ -84,7 +88,8 @@ export default {
         this.robustLine = data.robustPortfolioLine
         this.aggressiveName = data.aggressivePortfolioNameList
         this.aggressiveLine = data.aggressivePortfolioLine
-        this.profitEveryday = data.profitEveryday
+        this.profitEveryWeek = data.profitEveryWeek
+        this.profitRateEveryWeek = data.profitRateEveryWeek
         this.initCharts()
       })
     },
@@ -95,7 +100,8 @@ export default {
       const activeFund = this.$refs.activeFundLine
       const robustPortfolio = this.$refs.robustLine
       const aggressivePortfolio = this.$refs.aggressiveLine
-      const profitEveryday = this.$refs.profitEveryday
+      const profitEveryWeek = this.$refs.profitEveryWeek
+      const profitRateEveryWeek = this.$refs.profitRateEveryWeek
 
       const myPieCharts = this.$echarts.init(pieChart, 'walden')
       const myLineCharts = this.$echarts.init(lineChart, 'walden')
@@ -103,7 +109,8 @@ export default {
       const myActiveFundCharts = this.$echarts.init(activeFund, 'walden')
       const myRobustPortfolioCharts = this.$echarts.init(robustPortfolio, 'walden')
       const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden')
-      const profitEverydayCharts = this.$echarts.init(profitEveryday, 'walden')
+      const profitEveryWeekCharts = this.$echarts.init(profitEveryWeek, 'walden')
+      const profitRateEveryWeekCharts = this.$echarts.init(profitRateEveryWeek, 'walden')
 
       const pieOption = {
         //动画时长 2000ms
@@ -295,7 +302,7 @@ export default {
           },
         series: this.aggressiveLine
       };
-      const profitEverydayOption =  {
+      const profitEveryWeekOption =  {
           title: {
             text: '总资产日常变动'
           },
@@ -316,7 +323,7 @@ export default {
             {
               name: "收益",
               type: 'candlestick',
-              data: this.profitEveryday,
+              data: this.profitEveryWeek,
               barWidth: 20,
               animationDuration: 2000,
               itemStyle: {
@@ -329,13 +336,47 @@ export default {
             }
           ]
         };
+      const profitRateEveryWeekLineOption = {
+            //动画时长 2000ms
+            animationDuration: 2000,
+            title:{
+              text: "总收益率"
+            },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'line'
+              }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              data: this.dateList
+            },
+            yAxis: {
+                type: 'value',
+              },
+            series: [
+              {
+                name: '总收益率',
+                data: this.profitRateEveryWeek,
+                type: 'line',
+              }
+            ]
+          };
       myPieCharts.setOption(pieOption)
       myLineCharts.setOption(lineOption)
       myIndexFundCharts.setOption(indexLineOption)
       myActiveFundCharts.setOption(activeLineOption)
       myRobustPortfolioCharts.setOption(robustLineOption)
       myAggressivePortfolioCharts.setOption(aggressiveLineOption)
-      profitEverydayCharts.setOption(profitEverydayOption)
+      profitEveryWeekCharts.setOption(profitEveryWeekOption)
+      profitRateEveryWeekCharts.setOption(profitRateEveryWeekLineOption)
     }
   },
 }
