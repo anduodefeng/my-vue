@@ -88,7 +88,7 @@
           <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profit" style="width:180px"/>
         </el-form-item>
         <el-form-item label="收益率" prop="profitRate">
-          <el-input v-model="addPortfolioForm.profitRate" style="width:180px"/>
+          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profitRate" style="width:180px"/>
         </el-form-item>
         <el-form-item label="组合类型" prop="type">
           <el-radio v-model="addPortfolioForm.type" label="0">稳健</el-radio>
