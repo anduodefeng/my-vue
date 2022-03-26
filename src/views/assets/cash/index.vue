@@ -57,7 +57,7 @@
           <el-input v-model="addBankForm.bankName" style="width:180px"/>
         </el-form-item>
         <el-form-item label="总金额" prop="changeMoney">
-          <el-input type="number" v-model.number="addBankForm.changeMoney" style="width:180px"/>
+          <el-input-number :precision="2" :step="0.01" v-model.number="addBankForm.changeMoney" style="width:180px"/>
         </el-form-item>
         <el-form-item label="原因">
           <el-input v-model="addBankForm.reason" style="width:180px"/>
@@ -95,8 +95,7 @@ export default {
           {required: true, message: "请输入银行名称", trigger: "blur"}
         ],
         changeMoney: [
-          {required: true, message: "请输入变动金额", trigger: "blur"},
-          {type: 'number', message: "变动金额必须为数字", trigger: "blur"}
+          {required: true, message: "请输入变动金额", trigger: "blur"}
         ]
       },
       bankWidth: '90px',
