@@ -293,12 +293,18 @@ export default {
           {
             name: '总资产',
             data: this.totalAmount,
-            type: 'line'
+            type: 'line',
+            lineStyle:{
+              width: 2
+            }
           },
           {
             name: '总成本',
             data: this.totalPrincipal,
-            type: 'line'
+            type: 'line',
+            lineStyle:{
+              width: 2
+            }
           }
         ]
       };

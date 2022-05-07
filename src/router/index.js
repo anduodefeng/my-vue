@@ -130,14 +130,14 @@ export const constantRoutes = [
             path: 'egg-roll',
             name: 'egg-roll',
             component: () => import('@/views/assets/portfolio/egg-roll/index'),
-            meta: { title: '蛋卷平台', icon: 'money'}
+            meta: { title: '蛋卷&天天平台', icon: 'money'}
           },
           {
             path: 'egg-roll-detail',
             name: 'egg-roll-detail',
             hidden: true,
             component: () => import('@/views/assets/portfolio/egg-roll/detail'),
-            meta: { title: '蛋卷平台', icon: 'money'}
+            meta: { title: '蛋卷&天天平台', icon: 'money'}
           },
           {
             path: 'qie-man',

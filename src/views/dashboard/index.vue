@@ -164,11 +164,17 @@ export default {
             name: '总资产',
             data: this.moneyList,
             type: 'line',
+            lineStyle:{
+              width: 2
+            }
           },
           {
             name: '总成本',
             data: this.totalPrincipal,
             type: 'line',
+            lineStyle:{
+              width: 2
+            }
           }
         ]
       };
@@ -366,6 +372,9 @@ export default {
                 name: '总收益率',
                 data: this.profitRateEveryWeek,
                 type: 'line',
+                lineStyle: {
+                  "width": 2
+                }
               }
             ]
           };
