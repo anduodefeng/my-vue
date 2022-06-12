@@ -6,13 +6,13 @@
         <span class="infoNum">{{ totalAssets }}</span>
       </div>
       <div class="assetsDiv">
-        <span class="info">总收益(元)：</span>
+        <span class="info">理财收益(元)：</span>
         <span v-if="totalProfit > 0 " style="color:red;" class="infoNum" >{{ totalProfit }}</span>
         <span v-if="totalProfit < 0 " style="color:green;" class="infoNum" >{{ totalProfit }}</span>
         <span v-if="totalProfit == 0 " class="infoNum">{{ totalProfit }}</span>
       </div>
       <div class="assetsDiv">
-        <span class="info">总收益率：</span>
+        <span class="info">理财收益率：</span>
         <span v-if="totalProfitRate > 0 " style="color:red;" class="infoNum" >{{ totalProfitRate }}%</span>
         <span v-if="totalProfitRate < 0 " style="color:green;" class="infoNum" >{{ totalProfitRate }}%</span>
         <span v-if="totalProfitRate == 0 " class="infoNum">{{ totalProfitRate }}</span>
@@ -23,8 +23,8 @@
       <div ref = "totalLine" style="width: 790px; height:400px;float:left;"></div>
     </div>
     <div class="chartDiv">
-      <div ref = "profitEveryWeek" style="width:650px; height:400px;float:left;"></div>
-      <div ref = "profitRateEveryWeek" style="width: 650px; height:400px;float:left;"></div>
+      <div ref = "profitEveryWeek" style="width:600px; height:400px;float:left;"></div>
+      <div ref = "profitRateEveryWeek" style="width: 790px; height:400px;float:left;"></div>
     </div>
     
     <div ref = "indexFundLine" class="chartDiv"></div>
@@ -134,7 +134,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "总资产变化"
+          text: "理财总资产变化"
         },
         tooltip: {
           trigger: 'axis',
@@ -143,7 +143,7 @@ export default {
           }
         },
         legend: {
-          data: ['总资产', '总成本']
+          data: ['理财总资产', '理财总成本']
         },
         grid: {
             left: '3%',
@@ -161,7 +161,7 @@ export default {
           },
         series: [
           {
-            name: '总资产',
+            name: '理财总资产',
             data: this.moneyList,
             type: 'line',
             lineStyle:{
@@ -169,7 +169,7 @@ export default {
             }
           },
           {
-            name: '总成本',
+            name: '理财总成本',
             data: this.totalPrincipal,
             type: 'line',
             lineStyle:{
@@ -310,7 +310,7 @@ export default {
       };
       const profitEveryWeekOption =  {
           title: {
-            text: '总资产日常变动'
+            text: '理财总资产周变动'
           },
           tooltip: {
             trigger: 'axis',
@@ -346,7 +346,7 @@ export default {
             //动画时长 2000ms
             animationDuration: 2000,
             title:{
-              text: "总收益率"
+              text: "理财总收益率"
             },
             tooltip: {
               trigger: 'axis',
@@ -369,7 +369,7 @@ export default {
               },
             series: [
               {
-                name: '总收益率',
+                name: '理财总收益率',
                 data: this.profitRateEveryWeek,
                 type: 'line',
                 lineStyle: {
