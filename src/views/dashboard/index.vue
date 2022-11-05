@@ -330,7 +330,7 @@ export default {
               name: "收益",
               type: 'candlestick',
               data: this.profitEveryWeek,
-              barWidth: 20,
+              barWidth: 5,
               animationDuration: 2000,
               itemStyle: {
                 color: "#eb5454",
