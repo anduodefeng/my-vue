@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.code)">详情</el-button>
+          <el-button type="primary" plain @click="getDetail(scope.row.code, scope.row.name)">详情</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" label="记录">
@@ -210,11 +210,11 @@ export default {
 
       this.addFundDrawerVisible=true
     },
-    getDetail(code){
+    getDetail(code,name){
       this.$router.push({
         path: "/assets/fund",
         name: 'indexFundDetail',
-        params: {code: code}
+        params: {code: code, name:name}
       })
     },
     recordFund(code, name){

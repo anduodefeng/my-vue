@@ -77,7 +77,8 @@ export default {
       pageSize: 30,
       dateList:[],
       dataList:[],
-      rateList:[]
+      rateList:[],
+      codeName: this.$$route.params.name
     }
   },
   created() {
@@ -124,7 +125,7 @@ export default {
         const myLineCharts = this.$echarts.init(lineChart, 'walden')
         const option = {
           title: {
-            text: '基金日常变动'
+            text: this.codeName+'(周变动)'
           },
           tooltip: {
             trigger: 'axis',
@@ -158,7 +159,7 @@ export default {
         }
         const lineOption = {
           title: {
-            text: '基金收益率'
+            text: this.codeName+'(收益率)'
           },
           tooltip: {
             trigger: 'axis',

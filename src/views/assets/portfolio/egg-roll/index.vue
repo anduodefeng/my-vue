@@ -55,7 +55,7 @@
       </el-table-column>
       <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.id)">详情</el-button>
+          <el-button type="primary" plain @click="getDetail(scope.row.id, scope.row.name)">详情</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" label="记录">
@@ -209,11 +209,11 @@ export default {
 
       this.addPortfolioDrawerVisible = true
     },
-    getDetail(id){
+    getDetail(id,name){
       this.$router.push({
         path: "/assets/portfolio",
         name: 'egg-roll-detail',
-        params: {id: id}
+        params: {id: id, name: name}
       })
     },
     recordPortfolio(id, name, type){
@@ -246,7 +246,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "各个基金占比",
+          text: "组合占比",
         },
         tooltip:{
           trigger: 'item',
@@ -264,7 +264,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title:{
-          text: "基金组合总资产"
+          text: "组合总资产"
         },
         tooltip: {
           trigger: 'axis',
