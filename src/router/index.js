@@ -79,12 +79,12 @@ export const constantRoutes = [
         meta: { title: '基金', icon: 'financial' },
         component: () => import('@/views/assets/fund/index'),
         children: [
-          {
-            path: 'indexFund',
-            name: 'indexFund',
-            component: () => import('@/views/assets/fund/index-fund/index'),
-            meta: { title: '指数基金', icon: 'money'}
-          },
+          // {
+          //   path: 'indexFund',
+          //   name: 'indexFund',
+          //   component: () => import('@/views/assets/fund/index-fund/index'),
+          //   meta: { title: '指数基金', icon: 'money'}
+          // },
           {
             path: 'indexFundDetail',
             name: 'indexFundDetail',
