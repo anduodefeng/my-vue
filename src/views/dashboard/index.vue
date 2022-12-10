@@ -27,7 +27,7 @@
       <div ref = "profitRateEveryWeek" style="width: 790px; height:400px;float:left;"></div>
     </div>
     
-    <div ref = "indexFundLine" class="chartDiv"></div>
+    <!-- <div ref = "indexFundLine" class="chartDiv"></div> -->
     <div ref = "activeFundLine" class="chartDiv"></div>
     <div ref = "robustLine" class="chartDiv"></div>
     <div ref = "aggressiveLine" class="chartDiv"></div>
@@ -55,7 +55,7 @@ export default {
       moneyList:[],
       totalPrincipal: [],
       indexFundName: [],
-      indexFundLine: [],
+      // indexFundLine: [],
       activeFundName: [],
       activeFundLine: [],
       robustName: [],
@@ -81,7 +81,7 @@ export default {
         this.moneyList = data.moneyList
         this.totalPrincipal = data.principalList
         this.indexFundName = data.indexFundNameList
-        this.indexFundLine = data.indexFundLine
+        // this.indexFundLine = data.indexFundLine
         this.activeFundName = data.activeFundNameList
         this.activeFundLine = data.activeFundLine
         this.robustName = data.robustPortfolioNameList
@@ -96,7 +96,7 @@ export default {
     initCharts(){
       const pieChart = this.$refs.totalPie
       const lineChart = this.$refs.totalLine
-      const indexFund = this.$refs.indexFundLine
+      // const indexFund = this.$refs.indexFundLine
       const activeFund = this.$refs.activeFundLine
       const robustPortfolio = this.$refs.robustLine
       const aggressivePortfolio = this.$refs.aggressiveLine
@@ -105,7 +105,7 @@ export default {
 
       const myPieCharts = this.$echarts.init(pieChart, 'walden')
       const myLineCharts = this.$echarts.init(lineChart, 'walden')
-      const myIndexFundCharts = this.$echarts.init(indexFund, 'walden')
+      // const myIndexFundCharts = this.$echarts.init(indexFund, 'walden')
       const myActiveFundCharts = this.$echarts.init(activeFund, 'walden')
       const myRobustPortfolioCharts = this.$echarts.init(robustPortfolio, 'walden')
       const myAggressivePortfolioCharts = this.$echarts.init(aggressivePortfolio, 'walden')
@@ -178,37 +178,37 @@ export default {
           }
         ]
       };
-      const indexLineOption = {
-        //动画时长 2000ms
-        animationDuration: 2000,
-        title:{
-          text: "指数基金收益率"
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'line'
-          }
-        },
-        legend: {
-          data: this.indexFundName,
-          left: 150
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          data: this.dateList
-        },
-        yAxis: {
-            type: 'value',
-          },
-        series: this.indexFundLine
-      };
+      // const indexLineOption = {
+      //   //动画时长 2000ms
+      //   animationDuration: 2000,
+      //   title:{
+      //     text: "指数基金收益率"
+      //   },
+      //   tooltip: {
+      //     trigger: 'axis',
+      //     axisPointer: {
+      //       type: 'line'
+      //     }
+      //   },
+      //   legend: {
+      //     data: this.indexFundName,
+      //     left: 150
+      //   },
+      //   grid: {
+      //       left: '3%',
+      //       right: '4%',
+      //       bottom: '3%',
+      //       containLabel: true
+      //   },
+      //   xAxis: {
+      //     type: 'category',
+      //     data: this.dateList
+      //   },
+      //   yAxis: {
+      //       type: 'value',
+      //     },
+      //   series: this.indexFundLine
+      // };
       const activeLineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
@@ -380,7 +380,7 @@ export default {
           };
       myPieCharts.setOption(pieOption)
       myLineCharts.setOption(lineOption)
-      myIndexFundCharts.setOption(indexLineOption)
+      // myIndexFundCharts.setOption(indexLineOption)
       myActiveFundCharts.setOption(activeLineOption)
       myRobustPortfolioCharts.setOption(robustLineOption)
       myAggressivePortfolioCharts.setOption(aggressiveLineOption)
