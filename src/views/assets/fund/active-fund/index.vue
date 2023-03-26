@@ -389,6 +389,7 @@ export default {
             symbol: "none",
             lineStyle: {
               width: 1,
+              color: "red",
             },
           },
         ],
