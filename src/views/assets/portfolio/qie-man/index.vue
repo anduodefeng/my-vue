@@ -1,9 +1,20 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" style="margin:10px;float:right;" @click="addPortfolio()">添加组合</el-button>
-    <div style="width:1400px;height:300px;">
-      <div ref="portfolioPie" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
-      <div ref="portfolioLine" style="width:600px;height:300px; margin-bottom:10px;float:left"></div>
+    <el-button
+      type="primary"
+      style="margin: 10px; float: right"
+      @click="addPortfolio()"
+      >添加组合</el-button
+    >
+    <div style="width: 1400px; height: 300px">
+      <div
+        ref="portfolioPie"
+        style="width: 600px; height: 300px; margin-bottom: 10px; float: left"
+      ></div>
+      <div
+        ref="portfolioLine"
+        style="width: 600px; height: 300px; margin-bottom: 10px; float: left"
+      ></div>
     </div>
     <el-table
       v-loading="listLoading"
@@ -16,7 +27,7 @@
     >
       <el-table-column align="center" label="序号" width="95">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="组合名称">
@@ -31,16 +42,30 @@
       </el-table-column>
       <el-table-column align="center" label="盈利">
         <template slot-scope="scope">
-          <span v-if="scope.row.profit > 0" style="color:red;font-weight:bolder">{{ scope.row.profit }}</span>
-          <span v-if="scope.row.profit < 0" style="color:green;font-weight:bolder">{{ scope.row.profit }}</span>
+          <span
+            v-if="scope.row.profit > 0"
+            style="color: red; font-weight: bolder"
+            >{{ scope.row.profit }}</span
+          >
+          <span
+            v-if="scope.row.profit < 0"
+            style="color: green; font-weight: bolder"
+            >{{ scope.row.profit }}</span
+          >
           <span v-if="scope.row.profit == 0">{{ scope.row.profit }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="收益率">
         <template slot-scope="scope">
-          <span v-if="scope.row.profitRate > 0" style="color:red">{{ scope.row.profitRate }}%</span>
-          <span v-if="scope.row.profitRate < 0" style="color:green">{{ scope.row.profitRate }}%</span>
-          <span v-if="scope.row.profitRate == 0">{{ scope.row.profitRate }}%</span>
+          <span v-if="scope.row.profitRate > 0" style="color: red"
+            >{{ scope.row.profitRate }}%</span
+          >
+          <span v-if="scope.row.profitRate < 0" style="color: green"
+            >{{ scope.row.profitRate }}%</span
+          >
+          <span v-if="scope.row.profitRate == 0"
+            >{{ scope.row.profitRate }}%</span
+          >
         </template>
       </el-table-column>
       <el-table-column align="center" label="更新时间">
@@ -55,40 +80,87 @@
       </el-table-column>
       <el-table-column align="center" label="查看">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="getDetail(scope.row.id, scope.row.name)">详情</el-button>
+          <el-button
+            type="primary"
+            plain
+            @click="getDetail(scope.row.id, scope.row.name)"
+            >详情</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column align="center" label="记录">
         <template slot-scope="scope">
-          <el-button type="primary" plain @click="recordPortfolio(scope.row.id, scope.row.name, scope.row.type)">变动</el-button>
+          <el-button
+            type="primary"
+            plain
+            @click="
+              recordPortfolio(scope.row.id, scope.row.name, scope.row.type)
+            "
+            >变动</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <br/>
-    <el-pagination style="float: right;" background layout="prev, pager, next"
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-    :current-page="currentPage"
-    :page-size="pageSize" 
-    :total="totalCount"/>
+    <br />
+    <el-pagination
+      style="float: right"
+      background
+      layout="prev, pager, next"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="totalCount"
+    />
 
-    <el-drawer :visible.sync="addPortfolioDrawerVisible" @close="$refs['addPortfolioForm'].resetFields()" :direction="direction" 
-               size="400px" title="更新组合(先更新当日收益情况，再更新转入转出操作哦！)">
-      <el-form style="margin-left:20px" :model="addPortfolioForm" ref="addPortfolioForm" :rules="addPortfolioRules" label-width="100px" size="mini" @submit.native.prevent>
+    <el-drawer
+      :visible.sync="addPortfolioDrawerVisible"
+      @close="$refs['addPortfolioForm'].resetFields()"
+      :direction="direction"
+      size="400px"
+      title="更新组合(先更新当日收益情况，再更新转入转出操作哦！)"
+    >
+      <el-form
+        style="margin-left: 20px"
+        :model="addPortfolioForm"
+        ref="addPortfolioForm"
+        :rules="addPortfolioRules"
+        label-width="100px"
+        size="mini"
+        @submit.native.prevent
+      >
         <el-form-item label="组合名称" prop="name">
-          <el-input v-model="addPortfolioForm.name" style="width:180px"/>
+          <el-input v-model="addPortfolioForm.name" style="width: 180px" />
         </el-form-item>
         <el-form-item>
-          <el-input v-show="false" v-model="addPortfolioForm.portfolioId"></el-input>
+          <el-input
+            v-show="false"
+            v-model="addPortfolioForm.portfolioId"
+          ></el-input>
         </el-form-item>
         <el-form-item label="总金额" prop="newMoney">
-          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.newMoney" style="width:180px"/>
+          <el-input-number
+            :precision="2"
+            :step="0.01"
+            v-model="addPortfolioForm.newMoney"
+            style="width: 180px"
+          />
         </el-form-item>
         <el-form-item label="盈利金额" prop="profit">
-          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profit" style="width:180px"/>
+          <el-input-number
+            :precision="2"
+            :step="0.01"
+            v-model="addPortfolioForm.profit"
+            style="width: 180px"
+          />
         </el-form-item>
         <el-form-item label="收益率" prop="profitRate">
-          <el-input-number :precision="2" :step="0.01" v-model="addPortfolioForm.profitRate" style="width:180px"/>
+          <el-input-number
+            :precision="2"
+            :step="0.01"
+            v-model="addPortfolioForm.profitRate"
+            style="width: 180px"
+          />
         </el-form-item>
         <el-form-item label="组合类型" prop="type">
           <el-radio v-model="addPortfolioForm.type" label="0">稳健</el-radio>
@@ -96,221 +168,236 @@
           <el-radio v-model="addPortfolioForm.type" label="2">定投</el-radio>
         </el-form-item>
         <el-form-item label="变动时间">
-          <el-date-picker v-model="addPortfolioForm.createTime" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"></el-date-picker>
+          <el-date-picker
+            v-model="addPortfolioForm.createTime"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择日期"
+          ></el-date-picker>
         </el-form-item>
-        <el-form-item style="text-align:left">
-          <el-button type="primary" @click="submitForm('addPortfolioForm')">添加</el-button>
+        <el-form-item style="text-align: left">
+          <el-button type="primary" @click="submitForm('addPortfolioForm')"
+            >添加</el-button
+          >
           <el-button @click="resetForm('addPortfolioForm')">重置</el-button>
         </el-form-item>
       </el-form>
-
     </el-drawer>
   </div>
 </template>
 
 <script>
-import { getChart, getPortfolioList, savePortfolioChange } from '@/api/portfolio'
+import {
+  getChart,
+  getPortfolioList,
+  savePortfolioChange,
+} from "@/api/portfolio";
 
 export default {
   data() {
     return {
       portfolioList: [],
       listLoading: true,
-      currentPage:1,
-      totalCount:1,
+      currentPage: 1,
+      totalCount: 1,
       pageSize: 20,
       addPortfolioDrawerVisible: false,
-      direction: 'rtl',
-      accountId: '1',
-      accountName: '且慢平台',
+      direction: "rtl",
+      accountId: "1",
+      accountName: "且慢平台",
       addPortfolioForm: {
-        portfolioId: '',
-        name: '',
-        newMoney: '',
-        profit: '',
-        profitRate: '',
-        type: '0',
-        createTime: ''
+        portfolioId: "",
+        name: "",
+        newMoney: "",
+        profit: "",
+        profitRate: "",
+        type: "0",
+        createTime: "",
       },
       addPortfolioRules: {
-        name: [
-          {required: true, message: "请输入组合名称", trigger: "blur"}
-        ]
+        name: [{ required: true, message: "请输入组合名称", trigger: "blur" }],
       },
       pieData: [],
       dateList: [],
       totalAmount: [],
-      totalPrincipal: []
-    }
+      totalPrincipal: [],
+    };
   },
-  mounted(){
-    this.getChartData()
+  mounted() {
+    this.getChartData();
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getPortfolioList({"page": this.currentPage, "pageSize": this.pageSize, "accountId": this.accountId}).then(response => {
-        this.portfolioList = response.data.portfolioList
-        this.currentPage = response.data.currentPage
-        this.totalCount = response.data.totalNum
-        this.listLoading = false
-      })
+      this.listLoading = true;
+      getPortfolioList({
+        page: this.currentPage,
+        pageSize: this.pageSize,
+        accountId: this.accountId,
+      }).then((response) => {
+        this.portfolioList = response.data.portfolioList;
+        this.currentPage = response.data.currentPage;
+        this.totalCount = response.data.totalNum;
+        this.listLoading = false;
+      });
     },
-    handleSizeChange(val){
+    handleSizeChange(val) {
       //改变每页显示的条数
-      this.pageSize = val
+      this.pageSize = val;
       //注意：在改变每页显示的条数时，要将页码显示到第一页
-      this.currentPage = 1
+      this.currentPage = 1;
     },
-    handleCurrentChange(val){
+    handleCurrentChange(val) {
       //改变默认的页数
-      this.currentPage = val
+      this.currentPage = val;
     },
-    submitForm(formName){
-      this.$refs[formName].validate((valid) =>{
-        if(valid){
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
           savePortfolioChange({
-            "portfolioId": this.addPortfolioForm.portfolioId,
-            "name": this.addPortfolioForm.name,
-            "newMoney": this.addPortfolioForm.newMoney,
-            "profit": this.addPortfolioForm.profit,
-            "profitRate": this.addPortfolioForm.profitRate,
-            "accountId": this.accountId,
-            "accountName": this.accountName,
-            "type": this.addPortfolioForm.type,
-            "createTime": this.addPortfolioForm.createTime
-          }).then(response => {
+            portfolioId: this.addPortfolioForm.portfolioId,
+            name: this.addPortfolioForm.name,
+            newMoney: this.addPortfolioForm.newMoney,
+            profit: this.addPortfolioForm.profit,
+            profitRate: this.addPortfolioForm.profitRate,
+            accountId: this.accountId,
+            accountName: this.accountName,
+            type: this.addPortfolioForm.type,
+            createTime: this.addPortfolioForm.createTime,
+          }).then((response) => {
             this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-            this.addPortfolioDrawerVisible = false
-            this.fetchData()
-          })
-        }else{
-          this.$message.error("请填写全部内容后，再提交!!!")
+              message: "保存成功",
+              type: "success",
+            });
+            this.addPortfolioDrawerVisible = false;
+            this.fetchData();
+          });
+        } else {
+          this.$message.error("请填写全部内容后，再提交!!!");
         }
-      })
+      });
     },
-    resetForm(formName){
-      if(this.$refs[formName]){
+    resetForm(formName) {
+      if (this.$refs[formName]) {
         this.$refs[formName].resetFields();
       }
     },
-    addPortfolio(){
-      this.addPortfolioForm.portfolioId = ''
-      this.addPortfolioForm.name = ''
-      this.addPortfolioForm.newMoney = 0
-      this.addPortfolioForm.profit = 0
-      this.addPortfolioForm.profitRate = 0
+    addPortfolio() {
+      this.addPortfolioForm.portfolioId = "";
+      this.addPortfolioForm.name = "";
+      this.addPortfolioForm.newMoney = 0;
+      this.addPortfolioForm.profit = 0;
+      this.addPortfolioForm.profitRate = 0;
 
-      this.addPortfolioDrawerVisible = true
+      this.addPortfolioDrawerVisible = true;
     },
-    getDetail(id,name){
+    getDetail(id, name) {
       this.$router.push({
         path: "/assets/portfolio",
-        name: 'qie-man-detail',
-        params: {id: id, name: name}
-      })
+        name: "qie-man-detail",
+        params: { id: id, name: name },
+      });
     },
-    recordPortfolio(id, name, type){
+    recordPortfolio(id, name, type) {
       this.addPortfolioForm.portfolioId = id;
-      this.addPortfolioForm.name = name
-      this.addPortfolioForm.type = type
-      this.addPortfolioForm.newMoney = 0
-      this.addPortfolioForm.profit = 0
-      this.addPortfolioForm.profitRate = 0
+      this.addPortfolioForm.name = name;
+      this.addPortfolioForm.type = type;
+      this.addPortfolioForm.newMoney = 0;
+      this.addPortfolioForm.profit = 0;
+      this.addPortfolioForm.profitRate = 0;
 
-      this.addPortfolioDrawerVisible = true
+      this.addPortfolioDrawerVisible = true;
     },
-    getChartData(){
-      getChart(1).then(response => {
+    getChartData() {
+      getChart(1).then((response) => {
         const { data } = response;
-        this.pieData = data.pieList
-        this.dateList = data.dateList
-        this.totalAmount = data.totalAmount
-        this.totalPrincipal = data.totalPrincipal
+        this.pieData = data.pieList;
+        this.dateList = data.dateList;
+        this.totalAmount = data.totalAmount;
+        this.totalPrincipal = data.totalPrincipal;
         this.initCharts();
-      })
+      });
     },
-    initCharts(){
-      const pieChart = this.$refs.portfolioPie
-      const lineChart = this.$refs.portfolioLine
+    initCharts() {
+      const pieChart = this.$refs.portfolioPie;
+      const lineChart = this.$refs.portfolioLine;
 
-      const myPieCharts = this.$echarts.init(pieChart, 'walden')
-      const myLineCharts = this.$echarts.init(lineChart, 'walden')
+      const myPieCharts = this.$echarts.init(pieChart, "walden");
+      const myLineCharts = this.$echarts.init(lineChart, "walden");
       const pieOption = {
         //动画时长 2000ms
         animationDuration: 2000,
-        title:{
+        title: {
           text: "各个基金占比",
         },
-        tooltip:{
-          trigger: 'item',
-          formatter: "{b} : {c}({d}%)"
+        tooltip: {
+          trigger: "item",
+          formatter: "{b} : {c}({d}%)",
         },
         series: [
           {
-            type: 'pie',
-            radius: '80%',
-            data: this.pieData
-          }
-        ]
+            type: "pie",
+            radius: "80%",
+            data: this.pieData,
+          },
+        ],
       };
       const lineOption = {
         //动画时长 2000ms
         animationDuration: 2000,
-        title:{
-          text: "基金组合总资产"
+        title: {
+          text: "基金组合总资产",
         },
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'cross'
-          }
+            type: "cross",
+          },
         },
         legend: {
-          data: ['总资产', '总成本']
+          data: ["总资产", "总成本"],
         },
         grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
         },
         xAxis: {
-          type: 'category',
-          data: this.dateList
+          type: "category",
+          data: this.dateList,
         },
         yAxis: {
-            type: 'value',
-
-          },
+          type: "value",
+          scale: true,
+        },
         series: [
           {
-            name: '总资产',
+            name: "总资产",
             data: this.totalAmount,
-            type: 'line',
-            lineStyle:{
-              width: 2
-            }
+            type: "line",
+            symbol: "none",
+            lineStyle: {
+              width: 1,
+            },
           },
           {
-            name: '总成本',
+            name: "总成本",
             data: this.totalPrincipal,
-            type: 'line',
-            lineStyle:{
-              width: 2
-            }
-          }
-        ]
+            type: "line",
+            symbol: "none",
+            lineStyle: {
+              width: 1,
+              color: "red",
+            },
+          },
+        ],
       };
-      myPieCharts.setOption(pieOption)
-      myLineCharts.setOption(lineOption)
-    }
-  }
-}
+      myPieCharts.setOption(pieOption);
+      myLineCharts.setOption(lineOption);
+    },
+  },
+};
 </script>
