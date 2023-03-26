@@ -1,5 +1,22 @@
 <template>
   <div>
+    <div style="padding-left: 50px; padding-top: 10px">
+      <span>选择基金：</span>
+      <el-select
+        v-model="fundCode"
+        placeholder="请选择"
+        size="medium"
+        @change="changeFund(fundCode)"
+      >
+        <el-option
+          v-for="fund in fundList"
+          :key="fund.fundCode"
+          :label="fund.fundName"
+          :value="fund.fundCode"
+        >
+        </el-option>
+      </el-select>
+    </div>
     <div ref="fundLine" class="chartDiv"></div>
   </div>
 </template>
@@ -10,6 +27,21 @@ export default {
   name: "fundData",
   data() {
     return {
+      fundCode: "519736",
+      fundName: "交银施罗德新成长混合",
+      fundList: [
+        { fundCode: "519736", fundName: "交银施罗德新成长混合" },
+        { fundCode: "519702", fundName: "交银施罗德趋势优先混合A" },
+        { fundCode: "002943", fundName: "广发多因子灵活配置混合" },
+        { fundCode: "320021", fundName: "诺安双利债券" },
+        { fundCode: "001694", fundName: "华安沪港深外延增长灵活配置混合A" },
+        { fundCode: "000991", fundName: "工银瑞信战略转型主题股票A" },
+        { fundCode: "003961", fundName: "易方达瑞程灵活配置混合A" },
+        { fundCode: "090018", fundName: "大成新锐产业混合" },
+        { fundCode: "001718", fundName: "工银瑞信物流产业股票A" },
+        { fundCode: "519002", fundName: "华安安信消费服务混合A" },
+        { fundCode: "121010", fundName: "国投瑞银瑞源灵活配置混合A" },
+      ],
       dateList: [],
       activeFundLine: [],
       percent10: [],
@@ -24,11 +56,11 @@ export default {
     };
   },
   mounted() {
-    this.fetchData();
+    this.fetchData(this.fundCode);
   },
   methods: {
-    fetchData() {
-      getFundData("001694").then((res) => {
+    fetchData(fundCode) {
+      getFundData(fundCode).then((res) => {
         const { data } = res;
         this.dateList = data.date;
         this.activeFundLine = data.worth;
@@ -52,7 +84,7 @@ export default {
         //动画时长 2000ms
         animationDuration: 2000,
         title: {
-          text: "华安刚沪深延伸",
+          text: this.fundName,
         },
         tooltip: {
           trigger: "axis",
@@ -188,6 +220,14 @@ export default {
 
       fundChart.setOption(activeLineOption);
     },
+    changeFund(fundCode) {
+      this.fundList.forEach((fund) => {
+        if (fund.fundCode == fundCode) {
+          this.fundName = fund.fundName;
+          this.fetchData(fundCode);
+        }
+      });
+    },
   },
 };
 </script>
@@ -197,5 +237,8 @@ export default {
   width: 1400px;
   height: 600px;
   margin-top: 30px;
+}
+.option_class {
+  height: 200px;
 }
 </style>
