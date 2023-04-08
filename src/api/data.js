@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 
-export function getFundData(data) {
+export function getFundData(code, type) {
   return request({
-    url: "/data/get/" + data,
+    url: "/data/get/" + code + "/" + type,
     method: "GET",
   });
 }

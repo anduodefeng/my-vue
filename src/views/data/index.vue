@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="padding-left: 50px; padding-top: 10px">
+    <div style="padding-left: 50px; padding-top: 10px; display: flex">
       <span>选择基金：</span>
       <el-select
         v-model="fundCode"
@@ -16,6 +16,16 @@
         >
         </el-option>
       </el-select>
+      <div style="margin-left: 20px">
+        <el-radio-group v-model="type" @input="getDateData()">
+          <el-radio-button label="0">近1个月</el-radio-button>
+          <el-radio-button label="1">近3个月</el-radio-button>
+          <el-radio-button label="2">近6个月</el-radio-button>
+          <el-radio-button label="3">近1年</el-radio-button>
+          <el-radio-button label="4">近2年</el-radio-button>
+          <el-radio-button label="5">近3年</el-radio-button>
+        </el-radio-group>
+      </div>
     </div>
     <div ref="fundLine" class="chartDiv"></div>
   </div>
@@ -29,6 +39,7 @@ export default {
     return {
       fundCode: "519736",
       fundName: "交银施罗德新成长混合",
+      type: "0",
       fundList: [
         { fundCode: "519736", fundName: "交银施罗德新成长混合" },
         { fundCode: "519702", fundName: "交银施罗德趋势优先混合A" },
@@ -56,11 +67,11 @@ export default {
     };
   },
   mounted() {
-    this.fetchData(this.fundCode);
+    this.fetchData(this.fundCode, this.type);
   },
   methods: {
-    fetchData(fundCode) {
-      getFundData(fundCode).then((res) => {
+    fetchData(fundCode, type) {
+      getFundData(fundCode, type).then((res) => {
         const { data } = res;
         this.dateList = data.date;
         this.activeFundLine = data.worth;
@@ -224,9 +235,13 @@ export default {
       this.fundList.forEach((fund) => {
         if (fund.fundCode == fundCode) {
           this.fundName = fund.fundName;
-          this.fetchData(fundCode);
+          this.fundCode = fundCode;
+          this.fetchData(fundCode, this.type);
         }
       });
+    },
+    getDateData() {
+      this.fetchData(this.fundCode, this.type);
     },
   },
 };
