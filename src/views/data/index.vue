@@ -10,9 +10,9 @@
       >
         <el-option
           v-for="fund in fundList"
-          :key="fund.fundCode"
-          :label="fund.fundName"
-          :value="fund.fundCode"
+          :key="fund.code"
+          :label="fund.name"
+          :value="fund.code"
         >
         </el-option>
       </el-select>
@@ -32,27 +32,15 @@
 </template>
 
 <script>
-import { getFundData } from "@/api/data";
+import { getFundData, getFundInfoList } from "@/api/data";
 export default {
   name: "fundData",
   data() {
     return {
-      fundCode: "519736",
-      fundName: "交银施罗德新成长混合",
-      type: "0",
-      fundList: [
-        { fundCode: "519736", fundName: "交银施罗德新成长混合" },
-        { fundCode: "519702", fundName: "交银施罗德趋势优先混合A" },
-        { fundCode: "002943", fundName: "广发多因子灵活配置混合" },
-        { fundCode: "320021", fundName: "诺安双利债券" },
-        { fundCode: "001694", fundName: "华安沪港深外延增长灵活配置混合A" },
-        { fundCode: "000991", fundName: "工银瑞信战略转型主题股票A" },
-        { fundCode: "003961", fundName: "易方达瑞程灵活配置混合A" },
-        { fundCode: "090018", fundName: "大成新锐产业混合" },
-        { fundCode: "001718", fundName: "工银瑞信物流产业股票A" },
-        { fundCode: "519002", fundName: "华安安信消费服务混合A" },
-        { fundCode: "121010", fundName: "国投瑞银瑞源灵活配置混合A" },
-      ],
+      fundCode: "",
+      fundName: "",
+      type: "3",
+      fundList: [],
       dateList: [],
       activeFundLine: [],
       percent10: [],
@@ -67,9 +55,18 @@ export default {
     };
   },
   mounted() {
-    this.fetchData(this.fundCode, this.type);
+    this.fetchFundList();
   },
   methods: {
+    fetchFundList() {
+      getFundInfoList().then((res) => {
+        const { data } = res;
+        this.fundList = data;
+        this.fundCode = data[0].code;
+        this.fundName = data[0].name;
+        this.fetchData(this.fundCode, this.type);
+      });
+    },
     fetchData(fundCode, type) {
       getFundData(fundCode, type).then((res) => {
         const { data } = res;
@@ -233,8 +230,8 @@ export default {
     },
     changeFund(fundCode) {
       this.fundList.forEach((fund) => {
-        if (fund.fundCode == fundCode) {
-          this.fundName = fund.fundName;
+        if (fund.code == fundCode) {
+          this.fundName = fund.name;
           this.fundCode = fundCode;
           this.fetchData(fundCode, this.type);
         }
