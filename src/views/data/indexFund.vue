@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { getFundData, getFundInfoList } from "@/api/data";
+import { getIndexFundData, getFundInfoList } from "@/api/data";
 export default {
   name: "fundData",
   data() {
@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     fetchFundList() {
-      getFundInfoList(0).then((res) => {
+      getFundInfoList(1).then((res) => {
         const { data } = res;
         this.fundList = data;
         this.fundCode = data[0].code;
@@ -69,7 +69,7 @@ export default {
       });
     },
     fetchData(fundCode, type) {
-      getFundData(fundCode, type).then((res) => {
+      getIndexFundData(fundCode, type).then((res) => {
         const { data } = res;
         this.dateList = data.date;
         this.activeFundLine = data.worth;
@@ -247,7 +247,7 @@ export default {
 
 <style lang="scss" scoped>
 .chartDiv {
-  width: 1400px;
+  width: 1500px;
   height: 600px;
   margin-top: 30px;
 }

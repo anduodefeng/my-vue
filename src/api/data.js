@@ -6,9 +6,15 @@ export function getFundData(code, type) {
     method: "GET",
   });
 }
-export function getFundInfoList(code, type) {
+export function getFundInfoList(type) {
   return request({
-    url: "/data/getFundInfoList",
+    url: "/data/getFundInfoList/" + type,
+    method: "GET",
+  });
+}
+export function getIndexFundData(code, type) {
+  return request({
+    url: "/data/getIndexData/" + code + "/" + type,
     method: "GET",
   });
 }

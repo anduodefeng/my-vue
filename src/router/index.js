@@ -172,6 +172,20 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/index_data",
+    component: Layout,
+    meta: { title: "指数数据", icon: "assets-amount" },
+    redirect: "/fund_data/fund",
+    children: [
+      {
+        path: "indexFund",
+        name: "indexFund",
+        component: () => import("@/views/data/indexFund"),
+        meta: { title: "指数数据", icon: "fund" },
+      },
+    ],
+  },
 ];
 
 /**
